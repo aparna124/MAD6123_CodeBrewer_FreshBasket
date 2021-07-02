@@ -14,6 +14,7 @@ const SignUp = ({navigation}) =>  {
           <Text style={styles.titleText}>
             Create an Account Here!
           </Text>
+          <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{navigation.navigate('Home')}}>Go to Home!</Text>
         </View>
 
         <View style={styles.footer}>
