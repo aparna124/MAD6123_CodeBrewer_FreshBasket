@@ -7,7 +7,12 @@ import { AntDesign } from '@expo/vector-icons';
 import { StackActions, NavigationActions } from 'react-navigation'; 
 
 
-const SignUp = ({navigation}) =>  {
+class SignUp extends React.Component   {
+
+  render()
+  {
+
+    const { navigate } = this.props.navigation;
 
     return (
       <View style={styles.container}>
@@ -23,7 +28,7 @@ const SignUp = ({navigation}) =>  {
               actions: [NavigationActions.navigate({ routeName: "Home" })],
             });
 
-            navigation.dispatch(navigateAction);
+            this.props.navigation.dispatch(navigateAction);
             
             }}>Go to Home!</Text>
         </View>
@@ -91,7 +96,7 @@ const SignUp = ({navigation}) =>  {
             </View>
 
             <View style={styles.signInbutton}>
-                <TouchableOpacity style={[styles.signIn, {color: 'black'}]} onPress={()=>{navigation.navigate('SignIn')}}>
+                <TouchableOpacity style={[styles.signIn, {color: 'black'}]} onPress={()=>{navigate('SignIn')}}>
                      <Text style={styles.signUpbtnText}>SignIn</Text>
                 </TouchableOpacity>    
             </View>
@@ -102,6 +107,7 @@ const SignUp = ({navigation}) =>  {
 
       </View>
   );
+  }   
 }
 
 
