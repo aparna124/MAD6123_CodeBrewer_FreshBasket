@@ -44,6 +44,7 @@ class ProductList extends React.Component {
         <SafeAreaView style={styles.safeAreaViewStyle}>
           <FlatList
           data={this.state.products}
+          numColumns={2}
           extraData={this.state}
           renderItem={({item}) => (
             <TouchableOpacity style={styles.item} onPress={() => this.props.navigation.navigate('ProductDetail')}>
@@ -70,39 +71,35 @@ class ProductList extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
+    // justifyContent: 'flex-start',
     backgroundColor: '#FFF',
-    padding: 15,
+    padding: '2%',
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-  },
-  safeAreaViewStyle: {
-    width: '100%',
+    // justifyContent: 'space-between',
   },
   item: {
-    padding: 15,
+    width: '46%',
+    padding: 10,
+    margin: '2%',
     borderColor: '#000',
     // backgroundColor: '#e2ffd4',
     borderWidth: 1,
     borderRadius: 5,
     // flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
     // shadowColor: '#000',
     // shadowRadius: 6,
     // shadowOpacity: 1,  
   },
   itemText: {
-    marginLeft: 10,
-    marginTop: 3,
-    flexGrow: 2,
-    fontSize: 25,
+    marginTop: 5,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   itemPrice: {
+    marginTop: 5,
     marginBottom: 5,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   imageView: {
