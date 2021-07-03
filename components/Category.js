@@ -29,7 +29,7 @@ class Category extends React.Component {
           })
         );
       });
-      Promise.allSettled(dataPromisies).then(() => {
+      Promise.all(dataPromisies).then(() => {
         this.setState({categories: categories})
       })  
     });

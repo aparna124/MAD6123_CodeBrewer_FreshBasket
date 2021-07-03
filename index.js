@@ -8,10 +8,10 @@ import ProductList from './components/ProductList';
 import Category from './components/Category';
 
 const Navigator = createStackNavigator({
-  // category: { screen: Category},
+  // ProductList: { screen: ProductList},
   SignIn: { screen: SignIn },
   SignUp: { screen: SignUp },
-  Home: { screen: HomeScreen },
+  Home: { screen: HomeScreen, navigationOptions: {headerShown: false} },
   ProductList: { screen: ProductList },
 },
 

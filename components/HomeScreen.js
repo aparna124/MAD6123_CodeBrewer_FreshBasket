@@ -9,6 +9,7 @@ import Home from './Home';
 import Category from './Category';
 import Cart from './Cart';
 import ProductList from './ProductList';
+import Profile from './Profile';
 
 const CategoryStack = createStackNavigator({
   Category: Category,
@@ -19,6 +20,7 @@ const TabNavigator = createBottomTabNavigator({
   Home: Home,
   Category: CategoryStack,
   Cart: Cart,
+  Profile: Profile,
 },
 {
   defaultNavigationOptions: ({ navigation }) => ({
@@ -32,6 +34,8 @@ const TabNavigator = createBottomTabNavigator({
         iconName = 'list';
       } else if (routeName == 'Cart') {
         iconName = 'basket';
+      } else if (routeName == 'Profile') {
+        iconName = 'person';
       }
 
       // You can return any component that you like here!

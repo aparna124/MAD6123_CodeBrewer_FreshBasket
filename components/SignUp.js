@@ -4,6 +4,8 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Ima
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 
+import { StackActions, NavigationActions } from 'react-navigation'; 
+
 
 const SignUp = ({navigation}) =>  {
 
@@ -14,7 +16,16 @@ const SignUp = ({navigation}) =>  {
           <Text style={styles.titleText}>
             Create an Account Here!
           </Text>
-          <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{navigation.navigate('Home')}}>Go to Home!</Text>
+          <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{
+
+            const navigateAction = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: "Home" })],
+            });
+
+            navigation.dispatch(navigateAction);
+            
+            }}>Go to Home!</Text>
         </View>
 
         <View style={styles.footer}>
