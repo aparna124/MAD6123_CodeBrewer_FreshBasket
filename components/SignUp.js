@@ -5,9 +5,52 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 
 import { StackActions, NavigationActions } from 'react-navigation'; 
+import {firebaseApp} from '../firebase-config';
 
 
 class SignUp extends React.Component   {
+
+  constructor() 
+  {
+    super();
+    this.state = { 
+      email: '', 
+      password: '',
+      isLoading: false
+    }
+  }
+
+  updateInputVal = (val, prop) => {
+    const state = this.state;
+    state[prop] = val;
+    this.setState(state);
+  }
+
+  registerUser = () => 
+  {
+    if(this.state.email === '' && this.state.password === '') 
+    {
+      Alert.alert('Enter details to signup!')
+    }
+    else
+    {
+      this.setState({
+        isLoading: true,
+      })
+    }
+
+    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then((res) => {
+        console.log('User registered successfully!')
+        this.setState({
+          isLoading: false,
+          email: '', 
+          password: ''
+        })
+        // this.props.navigation.navigate('Login')
+      })
+      .catch(error => this.setState({ errorMessage: error.message }))      
+}
 
   render()
   {
@@ -45,9 +88,7 @@ class SignUp extends React.Component   {
                 color = 'grey'
                 style = {styles.inputIcon}
                 />
-
-        
-                <TextInput style={styles.TextInput} placeholder="Enter your Mail"></TextInput>
+                <TextInput style={styles.TextInput} placeholder="Enter your Mail" value={this.state.email} onChangeText={(val) => this.updateInputVal(val, 'email')}></TextInput>
             </View>
 
              {/* Password */}
@@ -60,7 +101,7 @@ class SignUp extends React.Component   {
                 color = 'grey'
                 style = {styles.inputIcon}
                 />
-                <TextInput style={styles.TextInput} placeholder="Enter your Password" secureTextEntry={true}></TextInput>
+                <TextInput style={styles.TextInput} placeholder="Enter your Password" secureTextEntry={true} value={this.state.password} onChangeText={(val) => this.updateInputVal(val, 'password')}></TextInput>
             </View>
 
              {/* First name */}
@@ -91,7 +132,7 @@ class SignUp extends React.Component   {
 
             <View style={styles.signUpbutton}>
                 <TouchableOpacity style={[styles.signUp, {color: 'black'}]}>
-                     <Text style={styles.signbtnText}>SignUp</Text>
+                     <Text style={styles.signbtnText} onPress={() => this.registerUser()}>SignUp</Text>
                 </TouchableOpacity>    
             </View>
 
