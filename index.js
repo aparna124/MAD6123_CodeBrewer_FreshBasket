@@ -1,10 +1,10 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack'
 
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import HomeScreen from './HomeScreen';
-import ProductList from './ProductList';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
+import HomeScreen from './components/HomeScreen';
+import ProductList from './components/ProductList';
 
 const Navigator = createStackNavigator({
   SignIn: { screen: SignIn },
