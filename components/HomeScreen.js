@@ -8,9 +8,11 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Home from './Home';
 import Category from './Category';
 import Cart from './Cart';
+import ProductList from './ProductList';
 
 const CategoryStack = createStackNavigator({
   Category: Category,
+  ProductList: ProductList,
 });
 
 const TabNavigator = createBottomTabNavigator({
