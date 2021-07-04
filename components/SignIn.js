@@ -4,7 +4,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Ima
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import {firebaseApp} from '../firebase-config';
-import firebase from '@react-native-firebase/app';
+// import firebase from '@react-native-firebase/app';
 // import auth from '@react-native-firebase/auth';
 
 
@@ -24,15 +24,16 @@ class SignIn extends React.Component {
     const password = this.state.password;
     // this.state({error: '', isLoading: true});
     // const{email, password} = this.state;
-    firebaseApp.auth().signInWithEmailAndPassword(email, password)
+    firebaseApp.auth().signInWithEmailAndPassword("aparnab124@gmail.com", "appu124#")
     .then(() => {
       console.log(email);
       //this.state({error: '', isLoading: false});
       this.props.navigation.navigate('Home')
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log(e);
       console.log("Not a valid user");
-      this.state({error: 'Authentication failed', isLoading: false})
+      //this.state({error: 'Authentication failed', isLoading: false})
     })
   }
 
