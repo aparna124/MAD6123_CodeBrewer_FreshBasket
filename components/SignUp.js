@@ -92,8 +92,13 @@ class SignUp extends React.Component   {
             this.props.navigation.dispatch(navigateAction);
             
             }}>Go to Home!</Text>
+
+
+<Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{navigate('Profile')}}>Go to Profile!</Text>
         </View>
 
+
+        
         <View style={styles.footer}>
 
             {/* Email */}
