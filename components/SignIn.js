@@ -85,7 +85,7 @@ class SignIn extends React.Component {
                 </TouchableOpacity>    
             </View>
 
-            <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{navigation.navigate('SignUp')}}>Register Here!</Text>
+            <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('SignUp')}}>Register Here!</Text>
 
 
         </View>

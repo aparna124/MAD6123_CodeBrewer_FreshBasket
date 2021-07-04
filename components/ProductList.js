@@ -18,7 +18,9 @@ class ProductList extends React.Component {
     
     var products = [];
     var dataPromisies = [];
-    db.collection("products").get().then((snapshot) => {
+    console.log(this.props)
+    const catRef = db.collection("categories").doc(this.props.navigation.getParam('categoryId'))
+    db.collection("products").where("category", "==", catRef).get().then((snapshot) => {
       snapshot.docs.forEach(doc => {
         dataPromisies.push(
           storage.ref(doc.data().image).getDownloadURL().then((url) => {
@@ -31,7 +33,7 @@ class ProductList extends React.Component {
       Promise.all(dataPromisies).then(() => {
         this.setState({products: products})
       })  
-    });
+    }).catch((error) => console.log('error',error));
   }
 
   componentDidMount(){
@@ -41,27 +43,32 @@ class ProductList extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView style={styles.safeAreaViewStyle}>
+        <SafeAreaView>
           <FlatList
+          columnWrapperStyle={{justifyContent:'space-evenly'}}
           data={this.state.products}
           numColumns={2}
           extraData={this.state}
-          renderItem={({item}) => (
+          renderItem={({item}) => {
+            var price = item.price[Object.keys(item.price)[0]]
+            return (
             <TouchableOpacity style={styles.item} onPress={() => this.props.navigation.navigate('ProductDetail')}>
               <View style={styles.imageView}>
                 <Image
                   style={styles.image}
                   source={{
-                    uri: item.image,
+                    uri: item.imagePath,
                   }}
                 />
               </View>
               <Text style={styles.itemText}>{item.name}</Text>
-              <Text style={styles.itemPrice}>$ 2.5</Text>
+              <Text style={styles.itemPrice}>$ {price}</Text>
               {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
-              <Button style={styles.button} title="Add" color='#2ECC71' />
+              <TouchableOpacity style={styles.button}>
+              <Text  style={styles.textBtn}>Add</Text>
+              </TouchableOpacity>
             </TouchableOpacity>
-          )}/>
+          )}}/>
         </SafeAreaView>
       </View>
     );
@@ -71,32 +78,32 @@ class ProductList extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'flex-start',
+    justifyContent: 'flex-start',
     backgroundColor: '#FFF',
     padding: '2%',
-    flexDirection: 'row',
-    // justifyContent: 'space-between',
+    // flexDirection: 'row',
   },
   item: {
     width: '46%',
     padding: 10,
-    margin: '2%',
+    marginVertical: 8,
     borderColor: '#000',
     // backgroundColor: '#e2ffd4',
     borderWidth: 1,
     borderRadius: 5,
-    // flexDirection: 'row',
     alignItems: 'center',
     // shadowColor: '#000',
     // shadowRadius: 6,
     // shadowOpacity: 1,  
   },
   itemText: {
+    textAlign:'center',
     marginTop: 5,
     fontSize: 20,
     fontWeight: 'bold',
   },
   itemPrice: {
+    textAlign:'center',
     marginTop: 5,
     marginBottom: 5,
     fontSize: 18,
@@ -117,13 +124,17 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    height: 50,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
     borderColor: '#75C34D',
     borderWidth: 1,
     backgroundColor: '#75C34D'
+  },
+  textBtn: {
+    color: '#FFF',
+    fontSize: 17,
   }
 });
 

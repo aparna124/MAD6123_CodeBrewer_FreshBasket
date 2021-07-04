@@ -47,7 +47,8 @@ class Category extends React.Component {
           data={this.state.categories}
           extraData={this.state}
           renderItem={({item}) => (
-              <TouchableOpacity style={styles.item} onPress={() => this.props.navigation.navigate('ProductList')}>
+              <TouchableOpacity style={styles.item} onPress={() => 
+              this.props.navigation.navigate('ProductList', {categoryId: item.id})}>
                 <View style={styles.imageView}>
                   <Image
                     style={styles.image}
