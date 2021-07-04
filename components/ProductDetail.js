@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, SafeAreaView, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, FlatList, TouchableOpacity, Button, SafeAreaView, Image } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,26 +9,56 @@ import { AntDesign } from '@expo/vector-icons';
 import {firebaseApp} from '../firebase-config';
 
 class ProductDetail extends React.Component {
+  state = { products: null}
+
+  initCategory() {
+    console.log("initProducts")
+    const db = firebaseApp.firestore();
+    const storage = firebaseApp.storage();
+    
+    db.collection("products").doc(this.props.navigation.getParam('productId')).get().then((doc) => {
+      storage.ref(doc.data().image).getDownloadURL().then((url) => {
+        this.setState({product : { id: doc.id, imagePath: url, ...doc.data() }});
+      }).catch(() => {
+        this.setState({product : { id: doc.id, ...doc.data() }});
+      }) 
+    }).catch((error) => console.log('error',error));
+  }
+
+  componentDidMount(){
+    this.initCategory()
+  }
+
   render() {
+    if(this.state.product == null || undefined){
+      return (<View/>)
+    }
+    const weight = Object.keys(this.state.product.price)[0]
+    const price = this.state.product.price[weight]
+    
     return (
       <View style={styles.container}>
-        <View style={styles.imageView}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Tomato_je.jpg',
-            }}
-          />
-        </View>
-        <Text style={styles.itemText}>Brocoli</Text>
-        <View style={styles.itemtitle}>
-          <Text style={styles.itemPrice}>$ 2.5</Text>
-          <Text style={styles.itemWeight}>(500 gram)</Text>
-        </View>
-        <Text style={styles.itemtitle}>Product Information</Text>
-        <Text style={styles.itemDesc}>Broccoli is an edible green plant in the cabbage family whose large flowering head, stalk and small associated leaves are eaten as a vegetable.</Text>
-        <Text style={styles.itemtitle}>Ingredients</Text>
-        <Text style={styles.itemDesc}>Organic</Text>
+        <SafeAreaView>
+          <ScrollView>
+            <View style={styles.imageView}>
+              <Image
+                style={styles.image}
+                source={{
+                  uri: this.state.product.imagePath,
+                }}
+              />
+            </View>
+            <Text style={styles.itemText}>{this.state.product.name}</Text>
+            <View style={styles.itemtitle}>
+              <Text style={styles.itemPrice}>$ {price}</Text>
+              <Text style={styles.itemWeight}>({weight} gram)</Text>
+            </View>
+            <Text style={styles.itemtitle}>Product Information</Text>
+            <Text style={styles.itemDesc}>{this.state.product.details}</Text>
+            <Text style={styles.itemtitle}>Ingredients</Text>
+            <Text style={styles.itemDesc}>{this.state.product.ingredients}</Text>
+          </ScrollView>
+        </SafeAreaView>
       </View>
     );
   }

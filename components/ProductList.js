@@ -52,7 +52,9 @@ class ProductList extends React.Component {
           renderItem={({item}) => {
             var price = item.price[Object.keys(item.price)[0]]
             return (
-            <TouchableOpacity style={styles.item} onPress={() => this.props.navigation.navigate('ProductDetail')}>
+            <TouchableOpacity style={styles.item} onPress={() => 
+            this.props.navigation.navigate('ProductDetail', {productId: item.id})
+            }>
               <View style={styles.imageView}>
                 <Image
                   style={styles.image}
