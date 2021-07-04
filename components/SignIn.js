@@ -149,7 +149,6 @@ const styles = StyleSheet.create({
 
   inputIcon:
   {
-    
     position: 'absolute',
   },
 

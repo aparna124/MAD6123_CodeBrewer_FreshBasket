@@ -8,8 +8,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 class Home extends React.Component {
- 
-  render() {
+
+  render() 
+  {
     return (
     <View>
       <Text>Home</Text>
