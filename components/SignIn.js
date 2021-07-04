@@ -3,10 +3,42 @@ import React, { Component } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, TextInput } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
+import {firebaseApp} from '../firebase-config';
+import firebase from '@react-native-firebase/app';
+// import auth from '@react-native-firebase/auth';
 
 
-const SignIn = ({navigation}) =>  {
 
+class SignIn extends React.Component {
+
+  constructor(props) 
+  {
+    super(props);
+    this.state = {email: '', password: '',isLoading: false, error: ''}
+  }
+
+  signIn = () => 
+  {
+    console.log("Working");
+    const email = this.state.email;
+    const password = this.state.password;
+    // this.state({error: '', isLoading: true});
+    // const{email, password} = this.state;
+    firebaseApp.auth().signInWithEmailAndPassword(email, password)
+    .then(() => {
+      console.log(email);
+      //this.state({error: '', isLoading: false});
+      this.props.navigation.navigate('Home')
+    })
+    .catch(() => {
+      console.log("Not a valid user");
+      this.state({error: 'Authentication failed', isLoading: false})
+    })
+  }
+
+
+  render()
+  {
     return (
 
       <View style={styles.container}>
@@ -31,7 +63,7 @@ const SignIn = ({navigation}) =>  {
                 />
 
         
-                <TextInput style={styles.TextInput} placeholder="Enter your Mail"></TextInput>
+                <TextInput style={styles.TextInput} placeholder="Enter your Mail" onChangeText={email => this.setState({email})}></TextInput>
             </View>
 
              {/* Password */}
@@ -44,12 +76,12 @@ const SignIn = ({navigation}) =>  {
                 color = 'grey'
                 style = {styles.inputIcon}
                 />
-                <TextInput style={styles.TextInput} placeholder="Enter your Password" secureTextEntry={true}></TextInput>
+                <TextInput style={styles.TextInput} placeholder="Enter your Password" secureTextEntry={true} onChangeText={password => this.setState({password})}></TextInput>
             </View>
 
             <View style={styles.signUpbutton}>
                 <TouchableOpacity style={[styles.signUp, {color: 'black'}]}>
-                     <Text style={styles.signbtnText}>SignIn</Text>
+                     <Text style={styles.signbtnText} onPress={() => this.signIn()}>SignIn</Text>
                 </TouchableOpacity>    
             </View>
 
@@ -60,6 +92,7 @@ const SignIn = ({navigation}) =>  {
 
       </View>
   );
+  }  
 }
 
 

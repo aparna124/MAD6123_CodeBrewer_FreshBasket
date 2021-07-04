@@ -141,9 +141,6 @@ class SignUp extends React.Component   {
                      <Text style={styles.signUpbtnText}>SignIn</Text>
                 </TouchableOpacity>    
             </View>
-
-            
-
         </View>
 
       </View>
