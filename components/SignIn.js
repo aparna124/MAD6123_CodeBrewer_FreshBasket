@@ -64,7 +64,7 @@ class SignIn extends React.Component {
                 />
 
         
-                <TextInput style={styles.TextInput} placeholder="Enter your Mail" onChangeText={email => this.setState({email})}></TextInput>
+                <TextInput style={styles.TextInput} placeholder="Enter your Mail" autoCapitalize='none' onChangeText={email => this.setState({email})}></TextInput>
             </View>
 
              {/* Password */}

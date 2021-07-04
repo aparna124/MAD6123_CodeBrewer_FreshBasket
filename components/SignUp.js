@@ -16,6 +16,8 @@ class SignUp extends React.Component   {
     this.state = { 
       email: '', 
       password: '',
+      firstname: '',
+      lastname: '',
       isLoading: false
     }
   }
@@ -39,17 +41,33 @@ class SignUp extends React.Component   {
       })
     }
 
-    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+    firebaseApp.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
+        console.log(firebaseApp.auth().currentUser.uid);
+        const uid = firebaseApp.auth().currentUser.uid;
+        const db = firebaseApp.firestore();
+        db.collection('user').doc(uid).set({
+          firstname: this.state.firstname,
+          lastname: this.state.lastname,
+          email: this.state.email,
+          type: "user"
+          }).then(() => {
         console.log('User registered successfully!')
         this.setState({
           isLoading: false,
           email: '', 
-          password: ''
+          password: '',
+          firstname: '',
+          lastname: '',
         })
-        // this.props.navigation.navigate('Login')
+        this.props.navigation.navigate('Login')
       })
-      .catch(error => this.setState({ errorMessage: error.message }))      
+      
+    })
+      .catch(error =>{
+        console.log(error);
+        //this.setState({ errorMessage: error.message })
+      })      
 }
 
   render()
@@ -88,7 +106,7 @@ class SignUp extends React.Component   {
                 color = 'grey'
                 style = {styles.inputIcon}
                 />
-                <TextInput style={styles.TextInput} placeholder="Enter your Mail" value={this.state.email} onChangeText={(val) => this.updateInputVal(val, 'email')}></TextInput>
+                <TextInput style={styles.TextInput} placeholder="Enter your Mail" autoCapitalize='none' value={this.state.email} onChangeText={(val) => this.updateInputVal(val, 'email')}></TextInput>
             </View>
 
              {/* Password */}
@@ -114,7 +132,7 @@ class SignUp extends React.Component   {
                 color = 'grey'
                 style = {styles.inputIcon}
                 />
-                <TextInput style={styles.TextInput} placeholder="First Name"></TextInput>
+                <TextInput style={styles.TextInput} placeholder="First Name" value={this.state.firstname} onChangeText={(val) => this.updateInputVal(val, 'firstname')}></TextInput>
             </View>
 
              {/* Last name */}
@@ -127,7 +145,7 @@ class SignUp extends React.Component   {
                 color = 'grey'
                 style = {styles.inputIcon}
                 />
-                <TextInput style={styles.TextInput} placeholder="Last Name"></TextInput>
+                <TextInput style={styles.TextInput} placeholder="Last Name" value={this.state.lastname} onChangeText={(val) => this.updateInputVal(val, 'lastname')}></TextInput>
             </View>
 
             <View style={styles.signUpbutton}>
