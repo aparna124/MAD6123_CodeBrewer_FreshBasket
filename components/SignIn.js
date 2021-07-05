@@ -24,16 +24,17 @@ class SignIn extends React.Component {
     const password = this.state.password;
     // this.state({error: '', isLoading: true});
     // const{email, password} = this.state;
-    firebaseApp.auth().signInWithEmailAndPassword("aparnab124@gmail.com", "appu124#")
+    firebaseApp.auth().signInWithEmailAndPassword(email, password)
     .then(() => {
       console.log(email);
-      //this.state({error: '', isLoading: false});
       this.props.navigation.navigate('Home')
+      this.textInput1.clear()
+      this.textInput2.clear()
     })
     .catch((e) => {
       console.log(e);
       console.log("Not a valid user");
-      //this.state({error: 'Authentication failed', isLoading: false})
+      this.state({error: 'Authentication failed', isLoading: false})
     })
   }
 
@@ -64,7 +65,7 @@ class SignIn extends React.Component {
                 />
 
         
-                <TextInput style={styles.TextInput} placeholder="Enter your Mail" autoCapitalize='none' onChangeText={email => this.setState({email})}></TextInput>
+                <TextInput style={styles.TextInput} placeholder="Enter your Mail" autoCapitalize='none' onChangeText={email => this.setState({email})} ref={input1 => { this.textInput1 = input1 }}></TextInput>
             </View>
 
              {/* Password */}
@@ -77,7 +78,7 @@ class SignIn extends React.Component {
                 color = 'grey'
                 style = {styles.inputIcon}
                 />
-                <TextInput style={styles.TextInput} placeholder="Enter your Password" secureTextEntry={true} onChangeText={password => this.setState({password})}></TextInput>
+                <TextInput style={styles.TextInput} placeholder="Enter your Password" secureTextEntry={true} onChangeText={password => this.setState({password})} ref={input2 => { this.textInput2 = input2 }}></TextInput>
             </View>
 
             <View style={styles.signUpbutton}>

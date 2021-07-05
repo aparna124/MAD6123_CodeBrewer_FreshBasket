@@ -76,13 +76,13 @@ class SignUp extends React.Component   {
     const { navigate } = this.props.navigation;
 
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.header}>
           {/* <Image source={require('./assets/logo.png')}/> */}
           <Text style={styles.titleText}>
             Create an Account Here!
           </Text>
-          <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{
+          {/* <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{
 
             const navigateAction = StackActions.reset({
               index: 0,
@@ -91,10 +91,7 @@ class SignUp extends React.Component   {
 
             this.props.navigation.dispatch(navigateAction);
             
-            }}>Go to Home!</Text>
-
-
-<Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{navigate('Profile')}}>Go to Profile!</Text>
+            }}>Go to Home!</Text> */}
         </View>
 
 
@@ -166,7 +163,7 @@ class SignUp extends React.Component   {
             </View>
         </View>
 
-      </View>
+      </ScrollView>
   );
   }   
 }

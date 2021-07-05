@@ -22,7 +22,7 @@ const Navigator = createStackNavigator({
 
 {
     // Specifing Initial Screen
-    initalRoute: 'SignIn'
+    initalRoute: 'Profile'
 }
 
 );
