@@ -76,7 +76,7 @@ class SignUp extends React.Component   {
     const { navigate } = this.props.navigation;
 
     return (
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.header}>
           {/* <Image source={require('./assets/logo.png')}/> */}
           <Text style={styles.titleText}>
@@ -163,7 +163,7 @@ class SignUp extends React.Component   {
             </View>
         </View>
 
-      </ScrollView>
+      </View>
   );
   }   
 }
