@@ -82,7 +82,7 @@ class SignUp extends React.Component   {
           <Text style={styles.titleText}>
             Create an Account Here!
           </Text>
-          {/* <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{
+          <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{
 
             const navigateAction = StackActions.reset({
               index: 0,
@@ -91,7 +91,7 @@ class SignUp extends React.Component   {
 
             this.props.navigation.dispatch(navigateAction);
             
-            }}>Go to Home!</Text> */}
+            }}>Go to Home!</Text>
         </View>
 
 
