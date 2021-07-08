@@ -9,7 +9,7 @@ import { AntDesign } from '@expo/vector-icons';
 import {firebaseApp} from '../firebase-config';
 
 class ProductList extends React.Component {
-  state = { products: ''}
+  state = { products: '',}
 
   initCategory() {
     console.log("initProducts")
@@ -40,6 +40,50 @@ class ProductList extends React.Component {
     this.initCategory()
   }
 
+   addTocart(productId)
+  {
+    
+    firebaseApp.auth().onAuthStateChanged(function (user) {
+      if (user) {
+  
+        const userId = firebaseApp.auth().currentUser.uid;
+        firebaseApp.firestore().collection('cart2').doc(userId).get().then(function(doc){
+          let items;
+          if(doc.exists)
+          {
+            items = doc.data().items;
+            if(Object.keys(items).indexOf(productId) === -1 ){
+              items[productId] = 1;
+            }else{
+              items[productId]++;
+            }
+          }else{
+            // create new cart
+             items = {}
+             items[productId] = 1;
+          } 
+          firebaseApp.firestore().collection("cart2").doc(userId).set({
+            items: items,
+            userId:userId
+          }).then(() => {
+              alert("Item added to cart");
+              console.log("Document successfully written!");
+            }).catch((error) => {
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              // ..
+              //window.alert("Error: " + errorMessage);
+            });
+        })
+    
+      }
+      else {
+        alert("You have to sign in to add products");
+      }
+    });
+  }
+
+
   render() {
     return (
       <View style={styles.container}>
@@ -67,7 +111,7 @@ class ProductList extends React.Component {
               <Text style={styles.itemPrice}>$ {price}</Text>
               {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
               <TouchableOpacity style={styles.button}>
-              <Text  style={styles.textBtn}>Add</Text>
+              <Text  style={styles.textBtn} onPress={() => this.addTocart(item.id)}>Add</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           )}}/>
