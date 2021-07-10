@@ -13,7 +13,7 @@ class Cart extends React.Component {
   constructor(props)
   {
     super(props)
-    this.state = {products: ''}
+    this.state = {products: '', quantity: ''}
   }
 
 componentDidMount()
@@ -41,13 +41,16 @@ fetchCartData()
         items = doc.data().items;
         itemIdList = Object.keys(items);
         count = itemIdList.length;
-        console.log(itemIdList);
+        //console.log(items[doc.productId]);
         if(itemIdList.length > 0){
           db.collection("products").get().then((snapshot) => {
             snapshot.docs.forEach(doc => {
               if( itemIdList.indexOf(doc.id) !== -1)
               {
-                console.log(doc.data());
+                console.log(items[doc.id])
+                console.log(count);
+                self.state.quantity = items[doc.id];
+                //console.log(doc.data());
                 dataPromisies.push(
                 storage.ref(doc.data().image).getDownloadURL().then((url) => {
                 products = [ ...products, { id: doc.id, imagePath: url, ...doc.data() }];
@@ -60,6 +63,8 @@ fetchCartData()
            
             Promise.all(dataPromisies).then(() => {
               self.setState({products: products})
+              console.log(items[doc.id])
+              
             })  
           }).catch((error) => console.log('error',error));
         }
@@ -73,17 +78,45 @@ fetchCartData()
 }
 
 
+deleteItem(productId) {
 
-// displayCart(doc,qty) 
-// {
+  firebaseApp.auth().onAuthStateChanged(function (user) {
+    if (user) {
 
-//   var result = doc.data();
-//   console.log(result)
-//   var price = result.price[Object.keys(result.price)[0]]
-// }
+    const userId = firebaseApp.auth().currentUser.uid;
+    firebaseApp.firestore().collection('cart2').doc(userId).get().then(function(doc){
+      let items;
+      if(doc.exists)
+      {
+        items = doc.data().items;
+        delete(items[productId]);
+        firebaseApp.firestore().collection("cart2").doc(userId).set({
+          items: items,
+          userId:userId
+        }).then(() => {
+            alert("Document deleted succesfully!");
+            fetchCartData();
+          }).catch((error) => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ..
+            alert("Error: " + errorMessage);
+          });
+      } 
+    })
+    }
+  })
+}
 
+IncrementItem = (productId) => {
+  console.log("Incrementing");
+  this.setState({quantity: this.state.quantity + 1}) ;
+}
+DecreaseItem = (productId) => {
+  this.setState({quantity: this.state.quantity - 1}) ;
+}
 
-    render() {
+render() {
       return (
         <View style={styles.container}>
         <SafeAreaView>
@@ -106,11 +139,16 @@ fetchCartData()
                 <View style={styles.contentText}>
                   <Text style={styles.itemText}>{item.name}</Text>
                   <Text style={styles.itemPrice}>$ {price}</Text>
-                  <TextInput style={styles.input} placeholder= "Qty" onChangeText={todo => this.setState({todo})}/>
+                  <View style={styles.btns}>
+
+                    <Button title = "+" onPress={() => this.IncrementItem(item.id)}/>
+                    <TextInput style={styles.input} placeholder= "Qty" onChangeText={quantity => this.setState({quantity})}>{this.state.quantity}</TextInput>
+                    <Button title = "-" onPress={() => this.DecreaseItem(item.id)}/>
+                  </View>
                 </View>
                 <View style={styles.delbutton}>
                   {/* <AntDesign name="delete" size={24} color="#F07D4A" /> */}
-                  <Button color="#F07D4A" title="Remove" onPress={() => this.signOutUser()} />
+                  <Button color="#F07D4A" title="Remove" onPress={() => this.deleteItem(item.id)}/>
                 </View>
                 
                 {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
@@ -121,16 +159,17 @@ fetchCartData()
               </View>
             </TouchableOpacity>
           )}}/>
+         
         </SafeAreaView>
+        <TouchableOpacity style={styles.button} onPress={()=>{this.props.navigation.navigate('Checkout')}}>
+            <Text  style={styles.textBtn}>Proceed to Checkout</Text>
+          </TouchableOpacity>
       </View>
       );
     }
 }
 
 const styles = StyleSheet.create({
-
-  
- 
 
   container: {
     flex: 1,
@@ -192,14 +231,14 @@ const styles = StyleSheet.create({
     resizeMode: 'center'
   },
   button: {
-    width: '30%',
+    width: '100%',
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    borderColor: '#F07D4A',
+    borderColor: '#75C34D',
     borderWidth: 1,
-    backgroundColor: '#F07D4A',
+    backgroundColor: '#75C34D',
   },
   textBtn: {
     color: '#FFF',
@@ -207,17 +246,24 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    paddingLeft: 50,
+    paddingLeft: 25,
     borderColor: 'grey',
     padding: 8,
     margin: 10,
     borderRadius: 2,
-    width: 100,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 
   delbutton:
   {
     paddingTop: '15%',
+  },
+
+  btns:
+  {
+    flexDirection: 'row',
   }
   
 });

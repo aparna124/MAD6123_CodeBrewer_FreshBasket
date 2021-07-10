@@ -7,7 +7,9 @@ import HomeScreen from './components/HomeScreen';
 import Category from './components/Category';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
-import Profile from './components/Profile'
+import Profile from './components/Profile';
+import Cart from './components/Cart';
+import Checkout from './components/Checkout';
 
 const Navigator = createStackNavigator({
   // ProductList: { screen: ProductList },
@@ -18,6 +20,9 @@ const Navigator = createStackNavigator({
   ProductList: { screen: ProductList },
   ProductDetail: { screen: ProductDetail },
   Profile: {screen: Profile},
+  Cart: {screen: Cart},
+  Checkout: {screen: Checkout},
+
 },
 
 {
