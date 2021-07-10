@@ -9,7 +9,7 @@ import Home from './Home';
 import Category from './Category';
 import Cart from './Cart';
 import ProductList from './ProductList';
-import Profile from './Profile';
+import MyAccount from './MyAccount';
 
 const CategoryStack = createStackNavigator({
   Category: Category,
@@ -20,7 +20,7 @@ const TabNavigator = createBottomTabNavigator({
   Home: Home,
   Category: CategoryStack,
   Cart: Cart,
-  Profile: Profile,
+  MyAccount: MyAccount,
 },
 {
   defaultNavigationOptions: ({ navigation }) => ({
@@ -34,7 +34,7 @@ const TabNavigator = createBottomTabNavigator({
         iconName = 'list';
       } else if (routeName == 'Cart') {
         iconName = 'basket';
-      } else if (routeName == 'Profile') {
+      } else if (routeName == 'MyAccount') {
         iconName = 'person';
       }
 

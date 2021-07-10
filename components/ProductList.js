@@ -19,9 +19,23 @@ class ProductList extends React.Component {
     var products = [];
     var dataPromisies = [];
     console.log(this.props)
-    const catRef = db.collection("categories").doc(this.props.navigation.getParam('categoryId'))
-    db.collection("products").where("category", "==", catRef).get().then((snapshot) => {
+    
+    var prodRef = db.collection("products")
+    const catId = this.props.navigation.getParam('categoryId')
+    const searchText = this.props.navigation.getParam('searchText')
+
+    if(catId != null && catId != undefined && catId != ''){
+      const catRef = db.collection("categories").doc(catId)
+      prodRef = prodRef.where("category", "==", catRef)
+    } 
+    prodRef.get().then((snapshot) => {
       snapshot.docs.forEach(doc => {
+        var details = doc.data().details;
+        var pName = doc.data().name.toLowerCase();
+        console.log('searchText',searchText)
+        if( searchText != null && searchText != undefined && !(searchText.toLowerCase().includes(pName) || details.includes(searchText.toLowerCase()))) {
+          return
+        }
         dataPromisies.push(
           storage.ref(doc.data().image).getDownloadURL().then((url) => {
             products = [ ...products, { id: doc.id, imagePath: url, ...doc.data() }];
@@ -111,7 +125,7 @@ class ProductList extends React.Component {
               <Text style={styles.itemPrice}>$ {price}</Text>
               {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
               <TouchableOpacity style={styles.button}>
-              <Text  style={styles.textBtn} onPress={() => this.addTocart(item.id)}>Add</Text>
+                <Text  style={styles.textBtn} onPress={() => this.addTocart(item.id)}>Add</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           )}}/>

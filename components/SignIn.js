@@ -34,7 +34,7 @@ class SignIn extends React.Component {
     .catch((e) => {
       console.log(e);
       console.log("Not a valid user");
-      this.state({error: 'Authentication failed', isLoading: false})
+      this.setState({error: 'Authentication failed', isLoading: false})
     })
   }
 

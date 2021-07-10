@@ -10,8 +10,11 @@ import ProductDetail from './components/ProductDetail';
 import Profile from './components/Profile';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+import MyAccount from './components/MyAccount'
 
 const Navigator = createStackNavigator({
+  
+  // MyAccount: {screen: MyAccount},
   // ProductList: { screen: ProductList },
   // ProductDetail: { screen: ProductDetail },
   SignIn: { screen: SignIn },
@@ -22,7 +25,6 @@ const Navigator = createStackNavigator({
   Profile: {screen: Profile},
   Cart: {screen: Cart},
   Checkout: {screen: Checkout},
-
 },
 
 {

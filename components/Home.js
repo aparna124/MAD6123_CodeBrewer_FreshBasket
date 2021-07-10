@@ -1,5 +1,5 @@
 import React from "react";
-import {Text,View,FlatList,TouchableOpacity,StyleSheet,StatusBar,SafeAreaView, Image} from "react-native";
+import {Text,View,FlatList,TouchableOpacity,StyleSheet,StatusBar,SafeAreaView, Image, TextInput} from "react-native";
 import { SearchBar } from 'react-native-elements';
 import { createAppContainer } from "react-navigation";
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -20,6 +20,10 @@ class Home extends React.Component {
   updateSearch = (search) => {
     this.setState({ search });
   };
+
+  searchProduct = (searchText) => {
+    this.props.navigation.navigate('ProductList', {searchText: this.state.search})
+  }
 
 
   render() {
@@ -54,16 +58,16 @@ class Home extends React.Component {
                 </View>
               </View>
             </View>
-            <View
-              style={{
+            
+              <SearchBar style={{
                 flex: 2,
-                backgroundColor: "lightgrey",
-                alignItems: "center",
-              }}
-            >
-        
-              <SearchBar style={styles.seachbar} placeholder="Type Here..." onChangeText={this.updateSearch} value={search}/>
-            </View>
+                alignItems: "stretch",
+              }} 
+              placeholder="Type Here..." 
+              onChangeText={this.updateSearch} 
+              value={search}
+              onSubmitEditing={(text) => this.searchProduct(text)}/>
+            
           </View>
         </View>
 
@@ -103,7 +107,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   seachbar: {
-    width: 400,
+    flexGrow:5,
+
   }
 });
 export default Home;
