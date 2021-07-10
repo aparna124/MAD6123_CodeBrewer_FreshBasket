@@ -13,7 +13,7 @@ class Cart extends React.Component {
   constructor(props)
   {
     super(props)
-    this.state = {products: '', quantity: ''}
+    this.state = {products: ''}
   }
 
 componentDidMount()
@@ -37,25 +37,26 @@ fetchCartData()
       let itemIdList;
       let items;
       let count;
+      
       db.collection("cart2").doc(userId).get().then(function(doc){
         items = doc.data().items;
         itemIdList = Object.keys(items);
-        count = itemIdList.length;
+        count = itemIdList.length; 
         //console.log(items[doc.productId]);
         if(itemIdList.length > 0){
           db.collection("products").get().then((snapshot) => {
             snapshot.docs.forEach(doc => {
               if( itemIdList.indexOf(doc.id) !== -1)
               {
-                console.log(items[doc.id])
-                console.log(count);
-                self.state.quantity = items[doc.id];
-                //console.log(doc.data());
+                //console.log(items[doc.id])
+                //this.state.quantity = items[doc.id];
+                //self.setState({quantity: items[doc.id]});
+                console.log(self.state.quantity);
                 dataPromisies.push(
                 storage.ref(doc.data().image).getDownloadURL().then((url) => {
-                products = [ ...products, { id: doc.id, imagePath: url, ...doc.data() }];
+                products = [ ...products, { id: doc.id, imagePath: url, quantity: items[doc.id], ...doc.data() }];
               }).catch(() => {
-                products = [ ...products, { id: doc.id, ...doc.data() }];
+                products = [ ...products, { id: doc.id, quantity: items[doc.id], ...doc.data() }];
               })
               );
             }
@@ -90,18 +91,19 @@ deleteItem(productId) {
       {
         items = doc.data().items;
         delete(items[productId]);
-        firebaseApp.firestore().collection("cart2").doc(userId).set({
-          items: items,
-          userId:userId
-        }).then(() => {
-            alert("Document deleted succesfully!");
-            fetchCartData();
-          }).catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // ..
-            alert("Error: " + errorMessage);
-          });
+        cartSave(items, userId);
+        // firebaseApp.firestore().collection("cart2").doc(userId).set({
+        //   items: items,
+        //   userId:userId
+        // }).then(() => {
+        //     alert("Document deleted succesfully!");
+        //     fetchCartData();
+        //   }).catch((error) => {
+        //     var errorCode = error.code;
+        //     var errorMessage = error.message;
+        //     // ..
+        //     alert("Error: " + errorMessage);
+        //   });
       } 
     })
     }
@@ -110,10 +112,49 @@ deleteItem(productId) {
 
 IncrementItem = (productId) => {
   console.log("Incrementing");
-  this.setState({quantity: this.state.quantity + 1}) ;
+  //this.setState({quantity: this.state.quantity + 1}) ;;
+  const userId = firebaseApp.auth().currentUser.uid;
+  let products = this.state.products;
+  let product = products.find(p => p.id == productId)
+   product.quantity = product.quantity + 1;
+   this.setState({products});
+   this.cartSave(this.getItemsFromProducts(products), userId)
+   
+
 }
 DecreaseItem = (productId) => {
-  this.setState({quantity: this.state.quantity - 1}) ;
+  // this.setState({quantity: this.state.quantity - 1}) ;
+  const userId = firebaseApp.auth().currentUser.uid;
+  let products = this.state.products;
+  let product = products.find(p => p.id == productId)
+   product.quantity = product.quantity - 1;
+   this.setState({products});
+   this.cartSave(this.getItemsFromProducts(products), userId)
+}
+
+getItemsFromProducts(products)
+{
+ let items = {};
+ products.forEach(p => {
+   items[p.id] = p.quantity;
+ })
+ return items;
+}
+
+cartSave(items, userId)
+{
+  firebaseApp.firestore().collection("cart2").doc(userId).set({
+    items: items,
+    userId:userId
+  }).then(() => {
+      alert("Document deleted succesfully!");
+      fetchCartData();
+    }).catch((error) => {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ..
+      alert("Error: " + errorMessage);
+    });
 }
 
 render() {
@@ -140,9 +181,9 @@ render() {
                   <Text style={styles.itemText}>{item.name}</Text>
                   <Text style={styles.itemPrice}>$ {price}</Text>
                   <View style={styles.btns}>
-
+     
                     <Button title = "+" onPress={() => this.IncrementItem(item.id)}/>
-                    <TextInput style={styles.input} placeholder= "Qty" onChangeText={quantity => this.setState({quantity})}>{this.state.quantity}</TextInput>
+                    <TextInput style={styles.input} placeholder= "Qty">{item.quantity}</TextInput>
                     <Button title = "-" onPress={() => this.DecreaseItem(item.id)}/>
                   </View>
                 </View>
