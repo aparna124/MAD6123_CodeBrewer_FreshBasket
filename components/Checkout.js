@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Image, Button, TextInput} from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Image, Button, TextInput, ScrollView} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,18 +8,24 @@ import { AntDesign } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
 
 import {firebaseApp} from '../firebase-config';
+import color from 'color';
 
 class Checkout extends React.Component {
 
   constructor(props)
   {
     super(props)
-    this.state = {address: ''}
+    this.state = {address: '', products: [], total: 0}
+  
+
   }
+
+  
 
   componentDidMount()
   {
     this.fetchAddress()
+    this.fetchData()
   }
 
   fetchAddress()
@@ -49,9 +55,114 @@ class Checkout extends React.Component {
     });
   }
 
+  fetchData()
+  {
+    this.state.products = this.props.navigation.state.params.products;
+    //console.log(this.state.products[1].id);
+  //   ranks.forEach(function (e) {
+  //     console.log(e);
+  // });
+    var totalPrice = 0;
+    this.state.products.forEach(function (element) {
+      totalPrice = totalPrice + element.quantity*element.price[Object.keys(element.price)[0]];
+      console.log(totalPrice);
+    });
+    this.setState({total: totalPrice});
+    
+  }
+
+
+
+  dataToOrder()
+  {
+    var self = this;
+    var count = 0;
+    var orders = [];
+    
+    const db = firebaseApp.firestore();
+    var userId;
+    firebaseApp.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      userId = firebaseApp.auth().currentUser.uid;
+      console.log(userId);
+      let itemIdList;
+      let items;
+      db.collection("cart2").doc(userId).get().then(function(doc){
+        items = doc.data().items;
+        itemIdList = Object.keys(items);
+        count = itemIdList.length;
+        console.log(itemIdList);
+        if(itemIdList.length > 0){
+          db.collection("products").get().then((snapshot) => {
+            snapshot.docs.forEach(doc => {
+              if( itemIdList.indexOf(doc.id) !== -1)
+              {
+              
+                console.log(items[doc.id]);
+                var obj = {
+                          category: doc.data().category,
+                          image: doc.data().image,
+                          productname: doc.data().name,
+                          productprice: doc.data().price,
+                          quantity: items[doc.id],
+                        }
+                orders.push(obj);
+                console.log(orders);
+                //displayCart(doc, items[doc.id])
+              }
+            });
+           self.addToOrder(orders, userId);
+          })
+        }
+        else{
+          // empty cart
+        }
+      });
+    }
+  });
+  }
+
+
+  addToOrder(orders, userid) 
+  {
+    var self = this;
+    var docData = {
+      orderId: Date.now().toString(),
+      userId: userid,
+      status: "Ordered",
+      products: orders,
+      totalPrice: this.state.total
+    }
+    firebaseApp.firestore().collection("order123").doc().set(docData)
+      .then(() => {
+        console.log(orders);
+        console.log("Document successfully written!");
+        self.deleteCart(userid);
+      }).catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ..
+       alert("Error: " + errorMessage);
+      });
+  }
+
+deleteCart(userid) 
+{
+  var deleData = firebaseApp.firestore().collection('cart2').where('userId', '==', userid);
+  deleData.get().then(function (querySnapshot) {
+    querySnapshot.forEach(function (doc) {
+      doc.ref.delete();
+    });
+    window.location = 'index.html';
+  });
+  console.log(deleData);
+  
+}
+
   render() {
+
     return (
-     <View style={styles.container}>
+    <View style={styles.container}>
        <View style={styles.addressText}>
           <EvilIcons name="location" size={30} color="#75C34D" />
          <Text style={styles.address}>Shipping Address</Text>
@@ -59,31 +170,57 @@ class Checkout extends React.Component {
        <View style={styles.addressField}>
           <TextInput style={styles.input} placeholder= "Address" onChangeText={address => this.setState({address})}>{this.state.address}</TextInput>
       </View>
-      <View style={styles.item}>
-          <Text style={styles.countText}>0</Text>
+      <View style={styles.itemList}>
+        <View style={styles.cartTitle}>
+          <Text style={styles.countText}>{this.state.products.length}</Text>
           <Text style={styles.titleText}>Number of Items in Cart</Text>
+        </View>
+          {/* <Text>___________________________________________________________</Text>
 
-          <View style={styles.checkoutFooter}/>
+          <View style={styles.checkoutFooter}/> */}
 
-          <View style={styles.checkoutText}>
+          {/* <View style={styles.checkoutText}>
             <Text>Item1:</Text>
             <Text>Price</Text>
-          </View>
+          </View> */}
+            <View style={styles.content}>
+         
+         {
+           this.state.products.map((item,key) => (
+           <TouchableOpacity>
+               <View style={styles.cartItems}>
+                   <Text style={styles.itemName}>{item.name}({item.quantity})</Text>
+                   <Text style={styles.itemPrice}>${item.quantity * item.price[Object.keys(item.price)[0]]}</Text>
+               </View>
+
+               
+           </TouchableOpacity>
+           ))
+         }
+      
+       </View>
+
+       <View style={styles.priceText}>
+
+        <Text style={styles.countText}>Total: ${this.state.total}</Text>
+       </View>
+               
           <Image
-                style={{ marginTop: '20%', height: 150, width: 150,
+                style={{ marginTop: '5%', height: 150, width: 150,
                 resizeMode: 'contain'}}
                 source = {require('./checkout.png')}
               />
           <TouchableOpacity style={styles.button}>
-              <Text  style={styles.textBtn} onPress={() => this.deleteItem(item.id)}>Make a Payment</Text>
+              <Text  style={styles.textBtn} onPress={() => this.dataToOrder()}>Make a Payment</Text>
           </TouchableOpacity>
-          
-
+  
       </View>
      </View>
     );
+      }
+
   }
-}
+
 
 const styles = StyleSheet.create({
 
@@ -124,7 +261,7 @@ addressField:
   alignItems: 'center',
 },
 
-item: {
+itemList: {
   width: '100%',
   padding: 10,
   marginVertical: 8,
@@ -137,6 +274,22 @@ item: {
   alignContent: 'center',
   shadowColor: '#F4EDED',
   shadowRadius: 0.2,
+},
+
+items: {
+  padding: 20,
+  marginTop: 3,
+  backgroundColor: '#FFB6C1',
+},
+
+cartTitle:
+{
+  alignItems: 'center',
+  alignContent: 'center',
+  borderBottomColor: 'black', 
+  borderBottomWidth: 0.2, 
+  width: '100%',
+  paddingBottom: '5%',
 },
 
 checkoutFooter:
@@ -175,6 +328,42 @@ textBtn: {
   color: '#FFF',
   fontSize: 17,
 },
+
+cartItems:
+{
+  flexDirection: 'row',
+},
+
+itemName:
+{
+  color: 'blue',
+  fontSize: 20,
+  padding: 5,
+  paddingRight: 10,
+},
+
+itemPrice:
+{
+  color: 'blue',
+  fontSize: 20,
+  padding: 5,
+  paddingRight: '10%',
+},
+
+content:
+{
+  alignItems: 'center',
+  alignContent: 'center',
+  borderBottomColor: 'black', 
+  borderBottomWidth: 0.2, 
+  width: '100%',
+},
+
+priceText:
+{
+    paddingTop: '10%',
+}
+
 
 
 

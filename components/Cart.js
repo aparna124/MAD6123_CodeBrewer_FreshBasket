@@ -69,8 +69,9 @@ fetchCartData()
             })  
           }).catch((error) => console.log('error',error));
         }
-        else{
+        else if(itemIdList.length == 0){
           // empty cart
+          alert("Your cart is empty");
         }
       });
     }
@@ -91,19 +92,19 @@ deleteItem(productId) {
       {
         items = doc.data().items;
         delete(items[productId]);
-        cartSave(items, userId);
-        // firebaseApp.firestore().collection("cart2").doc(userId).set({
-        //   items: items,
-        //   userId:userId
-        // }).then(() => {
-        //     alert("Document deleted succesfully!");
-        //     fetchCartData();
-        //   }).catch((error) => {
-        //     var errorCode = error.code;
-        //     var errorMessage = error.message;
-        //     // ..
-        //     alert("Error: " + errorMessage);
-        //   });
+        //cartSave(items, userId);
+        firebaseApp.firestore().collection("cart2").doc(userId).set({
+          items: items,
+          userId:userId
+        }).then(() => {
+            alert("Document deleted succesfully!");
+            fetchCartData();
+          }).catch((error) => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ..
+            alert("Error: " + errorMessage);
+          });
       } 
     })
     }
@@ -202,7 +203,7 @@ render() {
           )}}/>
          
         </SafeAreaView>
-        <TouchableOpacity style={styles.button} onPress={()=>{this.props.navigation.navigate('Checkout')}}>
+        <TouchableOpacity style={styles.button} onPress={()=>{this.props.navigation.navigate('Checkout', {products: this.state.products})}}>
             <Text  style={styles.textBtn}>Proceed to Checkout</Text>
           </TouchableOpacity>
       </View>
