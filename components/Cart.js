@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Image, Button, TextInput} from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Image, Button, TextInput, ScrollView} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,8 +18,13 @@ class Cart extends React.Component {
 
 componentDidMount()
 {
-  this.fetchCartData()
+  this.props.navigation.addListener('willFocus', () => {
+    this.fetchCartData()
+
+  });
+ 
 }
+
 
 fetchCartData() 
 {
@@ -81,7 +86,7 @@ fetchCartData()
 
 
 deleteItem(productId) {
-
+  var self = this;
   firebaseApp.auth().onAuthStateChanged(function (user) {
     if (user) {
 
@@ -98,12 +103,12 @@ deleteItem(productId) {
           userId:userId
         }).then(() => {
             alert("Document deleted succesfully!");
-            fetchCartData();
+            self.fetchCartData();
           }).catch((error) => {
             var errorCode = error.code;
             var errorMessage = error.message;
             // ..
-            alert("Error: " + errorMessage);
+            //alert("Error: " + errorMessage);
           });
       } 
     })
@@ -161,6 +166,7 @@ cartSave(items, userId)
 render() {
       return (
         <View style={styles.container}>
+           <ScrollView>
         <SafeAreaView>
           <FlatList
           data={this.state.products}
@@ -201,11 +207,11 @@ render() {
               </View>
             </TouchableOpacity>
           )}}/>
-         
-        </SafeAreaView>
-        <TouchableOpacity style={styles.button} onPress={()=>{this.props.navigation.navigate('Checkout', {products: this.state.products})}}>
+          <TouchableOpacity style={styles.button} onPress={()=>{this.props.navigation.navigate('Checkout', {products: this.state.products})}}>
             <Text  style={styles.textBtn}>Proceed to Checkout</Text>
           </TouchableOpacity>
+        </SafeAreaView>
+      </ScrollView>
       </View>
       );
     }

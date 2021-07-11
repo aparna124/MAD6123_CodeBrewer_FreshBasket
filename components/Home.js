@@ -1,5 +1,5 @@
 import React from "react";
-import {Text,View,FlatList,TouchableOpacity,StyleSheet,StatusBar,SafeAreaView, Image, TextInput} from "react-native";
+import { Text, View, FlatList, TouchableOpacity, StyleSheet, StatusBar, SafeAreaView, Image, TextInput, ScrollView } from "react-native";
 import { SearchBar } from 'react-native-elements';
 import { createAppContainer } from "react-navigation";
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -8,13 +8,14 @@ import { createStackNavigator } from "react-navigation-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 
+import { firebaseApp } from '../firebase-config';
+
 class Home extends React.Component {
 
 
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
-    this.state = {search: ''}
+    this.state = { search: '', products: [] }
   }
 
   updateSearch = (search) => {
@@ -22,78 +23,194 @@ class Home extends React.Component {
   };
 
   searchProduct = (searchText) => {
-    this.props.navigation.navigate('ProductList', {searchText: this.state.search})
+    this.props.navigation.navigate('ProductList', { searchText: this.state.search })
   }
 
+  componentDidMount() {
+    this.topSellerDisplay()
+  }
+
+
+  topSellerDisplay() {
+
+    var self = this;
+    var topsellers = [];
+    console.log("Top seller");
+    firebaseApp.firestore().collection("order").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var len = Object.keys(doc.data().products).length;
+        //console.log(len);
+        for (var i = 0; i < len; i++) {
+          console.log(doc.data().products[i].quantity);
+          var orderQty = doc.data().products[i].quantity;
+          if (orderQty >= 2) {
+            //displayTopSellerItems();
+            var pName = doc.data().products[i].productname;
+            if (topsellers.includes(pName)) {
+              console.log("Item already displayed");
+            }
+            else {
+              topsellers.push(pName);
+              //console.log(pName);
+
+            }
+          }
+        }
+        self.displayTopSellerItems(topsellers)
+      });
+    });
+  }
+
+  displayTopSellerItems(topsellers) {
+    var self = this;
+    const db = firebaseApp.firestore();
+    const storage = firebaseApp.storage();
+    var products = [];
+    var dataPromisies = [];
+
+    topsellers.forEach(pName => {
+
+      firebaseApp.firestore().collection("products").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+
+          if (doc.data().name == pName) {
+            dataPromisies.push(
+              storage.ref(doc.data().image).getDownloadURL().then((url) => {
+                products = [...products, { id: doc.id, imagePath: url, ...doc.data() }];
+              }).catch(() => {
+                products = [...products, { id: doc.id, ...doc.data() }];
+              })
+            );
+          }
+
+        });
+        Promise.all(dataPromisies).then(() => {
+          self.setState({ products: products })
+          console.log(this.state.products.length)
+        })
+      }).catch((error) => console.log('error', error));
+
+    });
+
+  }
 
   render() {
 
     const { search } = this.state;
 
     return (
-      <View style={[styles.container, { flexDirection: "column" }]}>
-        <View style={{ flex: 1 }}>
-          <View style={[styles.container, { flexDirection: "column" }]}>
-            <View style={{ flex: 1, backgroundColor: "#75C34D" }}></View>
-            <View style={{ flex: 2, backgroundColor: "#75C34D" }}>
-              <View
-                style={[
-                  styles.container,
-                  { flexDirection: "row", alignItems: "center" },
-                ]}
-              >
-                <View style={{ flex: 1 }}>
-                  {/* <Text>menu</Text> */}
-                </View>
-
-                <View style={{ flex: 4 }} />
-
-                <View style={{ flex: 1 }}>
-                  {/* <Text>FreshBasket</Text> */}
+      <View >
+        <View >
+          <View >
+            <View style={{ fbackgroundColor: "#75C34D", backgroundColor:"#75C34D", height:100 }}>
+                <View>
                   <Image
-                style={{ width: 40, height: 40 }}
-                source = {require('./logo.png')}
+                    style={{ width: 40, height: 40, position: "absolute", left:10, top:50 }}
+                    source={require('./logo.png')}
 
-              />
+                  />
                 </View>
-              </View>
             </View>
-            
-              <SearchBar style={{
-                flex: 2,
-                alignItems: "stretch",
-              }} 
-              placeholder="Type Here..." 
-              onChangeText={this.updateSearch} 
+
+            <SearchBar style={{
+              alignItems: "stretch",
+            }}
+              placeholder="Type Here..."
+              onChangeText={this.updateSearch}
               value={search}
-              onSubmitEditing={(text) => this.searchProduct(text)}/>
+              onSubmitEditing={(text) => this.searchProduct(text)} />
+
+          </View>
+        </View>
+
+        {/* Content */}
+          {/* <View style={{ flex: 2, backgroundColor: "white", alignItems: "center" }}
+          >
+
+            <View>
+              <Image
+                style={{
+                  height: 400, width: 400, justifyContent: 'center',
+                  resizeMode: 'contain'
+                }}
+                source={require('./offer.png')}
+              />
+            </View>
+          </View> */}
+
+          <View >
+
             
+            {/* <View style={{ flex: 1, backgroundColor: "lightgrey" }}></View> */}
+            <View style={styles.prucdtList}>
+            <ScrollView>
+            <View>
+              <Image
+                style={{
+                  height: 400, width: 400, justifyContent: 'center',
+                  resizeMode: 'contain'
+                }}
+                source={require('./offer.png')}
+              />
+            </View>
+            <Text style={styles.headingFont}>Top Seller</Text>
+            <View>
+            {
+               this.state.products.map((item, index) => (
+              
+                <TouchableOpacity style={styles.item} onPress={() =>
+                  this.props.navigation.navigate('ProductDetail', { productId: item.id })
+                }>
+                  <View style={styles.imageView}>
+                    <Image
+                      style={styles.image}
+                      source={{
+                        uri: item.imagePath,
+                      }}
+                    />
+                  </View>
+                  <Text style={styles.itemText}>{item.name}</Text>
+                  <Text style={styles.itemPrice}>$ {item.price[Object.keys(item.price)[0]]}</Text>
+                  {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
+                  <TouchableOpacity style={styles.button}>
+                    <Text style={styles.textBtn} onPress={() => this.addTocart(item.id)}>Add</Text>
+                  </TouchableOpacity>
+                </TouchableOpacity>
+               ))
+            }
           </View>
-        </View>
+          </ScrollView>
+{/* 
+            <FlatList
+              data={this.state.products}
+              extraData={this.state}
+              renderItem={({ item }) => {
+                var price = item.price[Object.keys(item.price)[0]]
+                return (
+                  <TouchableOpacity style={styles.item} onPress={() =>
+                    this.props.navigation.navigate('ProductDetail', { productId: item.id })
+                  }>
+                    <View style={styles.imageView}>
+                      <Image
+                        style={styles.image}
+                        source={{
+                          uri: item.imagePath,
+                        }}
+                      />
+                    </View>
+                    <Text style={styles.itemText}>{item.name}</Text>
+                    <Text style={styles.itemPrice}>$ {price}</Text>
+                    {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
+                    {/* <TouchableOpacity style={styles.button}>
+                      <Text style={styles.textBtn} onPress={() => this.addTocart(item.id)}>Add</Text>
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+                )
+              }} /> */} 
 
-        <View
-          style={{ flex: 2, backgroundColor: "white", alignItems: "center" }}
-        >
-          <View>
-              {/* <Image resizeMode={'cover'}
-                style={{ width: '100%', height: 200 }}
-                source = {require('./banner.png')}
-
-              /> */}
+              </View>
           </View>
-        </View>
-
-        <View
-          style={{
-            flex: 2,
-            backgroundColor: "white",
-            paddingLeft: "2%",
-            paddingRight: "2%",
-          }}
-        >
-          <Text style={styles.headingFont}>Best Saver</Text>
-          <View style={{ flex: 1, backgroundColor: "lightgrey" }}></View>
-        </View>
+         
       </View>
     );
   }
@@ -103,12 +220,79 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+
+  headerStyle:
+  {
+    flex: 1,
+  },
   headingFont: {
     fontSize: 20,
+    color: '#75C34D',
+    fontWeight: 'bold',
+    marginBottom: '1%',
   },
   seachbar: {
-    flexGrow:5,
+    flexGrow: 5,
 
+  },
+  item: {
+    width: '100%',
+    padding: 10,
+    marginVertical: 8,
+    // borderColor: '#000',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 5,
+    alignItems: 'center',
+    // shadowColor: '#000',
+    // shadowRadius: 6,
+    // shadowOpacity: 1,  
+  },
+  itemText: {
+    textAlign: 'center',
+    marginTop: 5,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  itemPrice: {
+    textAlign: 'center',
+    marginTop: 5,
+    marginBottom: 5,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  imageView: {
+    display: 'flex',
+    width: 120,
+    height: 120,
+    padding: 10,
+    borderWidth: 2,
+    borderColor: 'tomato',
+    backgroundColor: '#FFF',
+  },
+  image: {
+    flexGrow: 1,
+    resizeMode: 'center'
+  },
+  button: {
+    width: '100%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    borderColor: '#75C34D',
+    borderWidth: 1,
+    backgroundColor: '#75C34D'
+  },
+  textBtn: {
+    color: '#FFF',
+    fontSize: 17,
+  },
+  prucdtList:
+  {
+    padding: '2%',
   }
+
+
 });
 export default Home;
