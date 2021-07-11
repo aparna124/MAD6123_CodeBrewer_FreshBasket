@@ -112,14 +112,15 @@ class Home extends React.Component {
                 </View>
             </View>
 
-            <SearchBar style={{
-              alignItems: "stretch",
-            }}
-              placeholder="Type Here..."
+            <SearchBar 
+              inputStyle={{backgroundColor: 'white', padding: 5,}}
+              containerStyle={{backgroundColor: '#75C34D', borderWidth: 0,}}
+              placeholderTextColor={'#75C34D'}
+              lightTheme
+              placeholder="Search by category or products ..."
               onChangeText={this.updateSearch}
               value={search}
               onSubmitEditing={(text) => this.searchProduct(text)} />
-
           </View>
         </View>
 
@@ -142,7 +143,7 @@ class Home extends React.Component {
 
             
             {/* <View style={{ flex: 1, backgroundColor: "lightgrey" }}></View> */}
-            <View style={styles.prucdtList}>
+          <View style={styles.prucdtList}>
             <ScrollView>
             <View>
               <Image
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
   },
   prucdtList:
   {
-    padding: '2%',
+    padding: 15,
   }
 
 

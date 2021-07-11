@@ -4,9 +4,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Ima
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import {firebaseApp} from '../firebase-config';
-// import firebase from '@react-native-firebase/app';
-// import auth from '@react-native-firebase/auth';
-
+import { StackActions, NavigationActions } from 'react-navigation'; 
 
 
 class SignIn extends React.Component {
@@ -87,8 +85,9 @@ class SignIn extends React.Component {
                 </TouchableOpacity>    
             </View>
 
-            <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('SignUp')}}>Register Here!</Text>
-
+            <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('SignUp')}}>Register Here!</Text>
+            <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('Home')}}>Skip and Go to Home</Text>
+            
 
         </View>
 

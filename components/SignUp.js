@@ -82,16 +82,6 @@ class SignUp extends React.Component   {
           <Text style={styles.titleText}>
             Create an Account Here!
           </Text>
-          <Text style={[{color: 'blue'}, {marginTop: 25}]} onPress={()=>{
-
-            const navigateAction = StackActions.reset({
-              index: 0,
-              actions: [NavigationActions.navigate({ routeName: "Home" })],
-            });
-
-            this.props.navigation.dispatch(navigateAction);
-            
-            }}>Go to Home!</Text>
         </View>
 
 
@@ -156,10 +146,16 @@ class SignUp extends React.Component   {
                 </TouchableOpacity>    
             </View>
 
-            <View style={styles.signInbutton}>
-                <TouchableOpacity style={[styles.signIn, {color: 'black'}]} onPress={()=>{navigate('SignIn')}}>
-                     <Text style={styles.signUpbtnText}>SignIn</Text>
-                </TouchableOpacity>    
+            <View style={styles.signInbutton}>    
+                <Text style={[{textAlign: 'center'}, {marginTop: 5}]} onPress={()=>{this.props.navigation.navigate('SignIn')}}>Login Here!</Text>
+                <Text style={[{textAlign: 'center'}, {marginBottom: 15}, {marginTop: 25}]} onPress={()=>{
+                  const navigateAction = StackActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({ routeName: "Home" })],
+                  });
+                  this.props.navigation.dispatch(navigateAction);
+                  }}>Skip and Go to Home
+                </Text>
             </View>
         </View>
 
