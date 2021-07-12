@@ -14,6 +14,7 @@ const ProfileRoute = () => (
 
  
 export default function MyAccount() {
+
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -22,7 +23,7 @@ export default function MyAccount() {
   ]);
  
   const renderScene = SceneMap({
-    Profile: ProfileRoute,
+    Profile: Profile,
     MyOrders: MyOrders,
   });
  

@@ -47,11 +47,13 @@ class Profile extends Component {
 
   signOutUser = async () => 
   {
+    var self = this;
     try {
         await firebaseApp.auth().signOut();
         console.log("Logout");
-        this.props.navigation.navigate('SignIn')
-        console.log(firebaseApp.auth().currentUser.uid);
+        self.props.navigation.navigate('SignIn');
+        //navigation.navigate('SignIn')
+        //console.log(firebaseApp.auth().currentUser.uid);
 
     } catch (e) {
         console.log(e);
@@ -153,6 +155,7 @@ class Profile extends Component {
 const styles = StyleSheet.create({
   container: {
    flex: 1,
+   backgroundColor: '#fff',
   },
 
   header: {

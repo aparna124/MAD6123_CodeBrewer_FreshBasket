@@ -84,14 +84,14 @@ class Checkout extends React.Component {
     firebaseApp.auth().onAuthStateChanged(function (user) {
     if (user) {
       userId = firebaseApp.auth().currentUser.uid;
-      console.log(userId);
+      //console.log(userId);
       let itemIdList;
       let items;
       db.collection("cart2").doc(userId).get().then(function(doc){
         items = doc.data().items;
         itemIdList = Object.keys(items);
         count = itemIdList.length;
-        console.log(itemIdList);
+        //console.log(itemIdList);
         if(itemIdList.length > 0){
           db.collection("products").get().then((snapshot) => {
             snapshot.docs.forEach(doc => {
@@ -135,7 +135,7 @@ class Checkout extends React.Component {
     }
     firebaseApp.firestore().collection("order123").doc().set(docData)
       .then(() => {
-        console.log(orders);
+        //console.log(orders);
         console.log("Document successfully written!");
         self.deleteCart(userid);
       }).catch((error) => {

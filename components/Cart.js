@@ -56,7 +56,7 @@ fetchCartData()
                 //console.log(items[doc.id])
                 //this.state.quantity = items[doc.id];
                 //self.setState({quantity: items[doc.id]});
-                console.log(self.state.quantity);
+                //console.log(self.state.quantity);
                 dataPromisies.push(
                 storage.ref(doc.data().image).getDownloadURL().then((url) => {
                 products = [ ...products, { id: doc.id, imagePath: url, quantity: items[doc.id], ...doc.data() }];
@@ -79,6 +79,11 @@ fetchCartData()
           alert("Your cart is empty");
         }
       });
+    }
+    else
+    {
+      alert("you have to login")
+      self.props.navigation.navigate('SignIn');
     }
   });
 
