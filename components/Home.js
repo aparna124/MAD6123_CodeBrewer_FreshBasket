@@ -145,66 +145,39 @@ class Home extends React.Component {
     const { search } = this.state;
 
     return (
-      <View >
-        <View >
-          <View >
-            <View style={{ fbackgroundColor: "#75C34D", backgroundColor:"#75C34D", height:100 }}>
-                <View>
-                  <Image
-                    style={{ width: 40, height: 40, position: "absolute", left:10, top:50 }}
-                    source={require('./logo.png')}
+      <SafeAreaView >
+        <View style={{ fbackgroundColor: "#75C34D", backgroundColor:"#75C34D", height:100 }}>
+          <Image
+              style={{ width: 40, height: 40, position: "absolute", left:10, top:50 }}
+              source={require('./logo.png')}
 
-                  />
-                </View>
-            </View>
-
-            <SearchBar 
-              inputStyle={{backgroundColor: 'white', padding: 5,}}
-              containerStyle={{backgroundColor: '#75C34D', borderWidth: 0,}}
-              placeholderTextColor={'#75C34D'}
-              lightTheme
-              placeholder="Search by category or products ..."
-              onChangeText={this.updateSearch}
-              value={search}
-              onSubmitEditing={(text) => this.searchProduct(text)} />
-          </View>
+            />
         </View>
-
-        {/* Content */}
-          {/* <View style={{ flex: 2, backgroundColor: "white", alignItems: "center" }}
-          >
-
-            <View>
-              <Image
-                style={{
-                  height: 400, width: 400, justifyContent: 'center',
-                  resizeMode: 'contain'
-                }}
-                source={require('./offer.png')}
-              />
-            </View>
-          </View> */}
-
-          <View >
-
-            
-            {/* <View style={{ flex: 1, backgroundColor: "lightgrey" }}></View> */}
-          <View style={styles.prucdtList}>
-            <ScrollView>
-            <View>
-              <Image
-                style={{
-                  height: 400, width: 400, justifyContent: 'center',
-                  resizeMode: 'contain'
-                }}
-                source={require('./offer.png')}
-              />
-            </View>
+        <SearchBar 
+          inputStyle={{backgroundColor: 'white', padding: 5,}}
+          containerStyle={{backgroundColor: '#75C34D', borderWidth: 0,}}
+          placeholderTextColor={'#75C34D'}
+          lightTheme
+          placeholder="Search by category or products ..."
+          onChangeText={this.updateSearch}
+          value={search}
+          onSubmitEditing={(text) => this.searchProduct(text)} />
+        <View style={styles.prucdtList}>
+          <ScrollView
+          contentContainerStyle={{display: 'flex', alignItems:'stretch'}}>
+            <Image
+              style={{
+                flexGrow:1,
+                height:400,
+                width:'100%',
+                resizeMode: 'contain'
+              }}
+              source={require('./offer.png')}
+            />
             <Text style={styles.headingFont}>Top Seller</Text>
-            <View>
-            {
-               this.state.products.map((item, index) => (
-              
+            <View style={{ marginBottom: 60,}}>
+              { this.state.products.map((item, index) => (
+            
                 <TouchableOpacity style={styles.item} onPress={() =>
                   this.props.navigation.navigate('ProductDetail', { productId: item.id })
                 }>
@@ -223,42 +196,12 @@ class Home extends React.Component {
                     <Text style={styles.textBtn} onPress={() => this.addTocart(item.id)}>Add</Text>
                   </TouchableOpacity>
                 </TouchableOpacity>
-               ))
-            }
-          </View>
+                ))
+              }
+            </View>
           </ScrollView>
-{/* 
-            <FlatList
-              data={this.state.products}
-              extraData={this.state}
-              renderItem={({ item }) => {
-                var price = item.price[Object.keys(item.price)[0]]
-                return (
-                  <TouchableOpacity style={styles.item} onPress={() =>
-                    this.props.navigation.navigate('ProductDetail', { productId: item.id })
-                  }>
-                    <View style={styles.imageView}>
-                      <Image
-                        style={styles.image}
-                        source={{
-                          uri: item.imagePath,
-                        }}
-                      />
-                    </View>
-                    <Text style={styles.itemText}>{item.name}</Text>
-                    <Text style={styles.itemPrice}>$ {price}</Text>
-                    {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
-                    {/* <TouchableOpacity style={styles.button}>
-                      <Text style={styles.textBtn} onPress={() => this.addTocart(item.id)}>Add</Text>
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                )
-              }} /> */} 
-
-              </View>
-          </View>
-         
-      </View>
+        </View> 
+      </SafeAreaView>
     );
   }
 }

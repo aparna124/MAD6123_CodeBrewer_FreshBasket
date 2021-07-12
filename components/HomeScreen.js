@@ -15,12 +15,19 @@ const CategoryStack = createStackNavigator({
   Category: Category,
   ProductList: ProductList,
 });
+const CartStack = createStackNavigator({
+  Cart: Cart,
+});
+
+const MyAccountStack = createStackNavigator({
+  MyAccount: MyAccount,
+});
 
 const TabNavigator = createBottomTabNavigator({
   Home: Home,
   Category: CategoryStack,
-  Cart: Cart,
-  MyAccount: MyAccount,
+  Cart: CartStack,
+  MyAccount: MyAccountStack,
 },
 {
   defaultNavigationOptions: ({ navigation }) => ({

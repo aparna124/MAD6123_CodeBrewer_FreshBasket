@@ -20,10 +20,7 @@ const Navigator = createStackNavigator({
   SignIn: { screen: SignIn },
   SignUp: { screen: SignUp },
   Home: { screen: HomeScreen, navigationOptions: {headerShown: false} },
-  ProductList: { screen: ProductList },
   ProductDetail: { screen: ProductDetail },
-  Profile: {screen: Profile},
-  Cart: {screen: Cart},
   Checkout: {screen: Checkout},
 },
 
