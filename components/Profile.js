@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, TextInput, Button } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import {firebaseApp} from '../firebase-config';
+import { StackActions, NavigationActions } from 'react-navigation'
 
 class Profile extends Component {
 
@@ -16,11 +17,19 @@ class Profile extends Component {
   fetchData()
   {
     let self = this;
-    console.log(this.state.firstname);
-    console.log(firebaseApp.auth().currentUser.uid);
-    const uid = firebaseApp.auth().currentUser.uid;
+    const currentUser = firebaseApp.auth().currentUser;
+    if( currentUser == null || currentUser == undefined){
+      alert("you have to login")
+      const navigateAction = StackActions.reset({
+        index: 0,
+        key: null,
+        actions: [NavigationActions.navigate({ routeName: 'SignIn' })],
+      });
+      self.props.navigation.dispatch(navigateAction);
+      return
+    }
     const db = firebaseApp.firestore();
-    db.collection("user").doc(uid).get() 
+    db.collection("user").doc(currentUser.uid).get() 
     .then(function(doc)
     {
       
@@ -40,20 +49,22 @@ class Profile extends Component {
   
 
   componentDidMount(){
+    // console.log('parent',this.props.navigation)
     this.fetchData();
   }
-
- 
 
   signOutUser = async () => 
   {
     var self = this;
     try {
         await firebaseApp.auth().signOut();
-        console.log("Logout");
-        self.props.navigation.navigate('SignIn');
-        //navigation.navigate('SignIn')
-        //console.log(firebaseApp.auth().currentUser.uid);
+
+        const navigateAction = StackActions.reset({
+          index: 0,
+          key: null,
+          actions: [NavigationActions.navigate({ routeName: 'SignIn' })],
+        });
+        self.props.navigation.dispatch(navigateAction);
 
     } catch (e) {
         console.log(e);
@@ -62,10 +73,20 @@ class Profile extends Component {
 
   updateUser()
   {
-    const uid = firebaseApp.auth().currentUser.uid;
+    const currentUser = firebaseApp.auth().currentUser;
+    if( currentUser == null || currentUser == undefined){
+      alert("you have to login")
+      const navigateAction = StackActions.reset({
+        index: 0,
+        key: null,
+        actions: [NavigationActions.navigate({ routeName: 'SignIn' })],
+      });
+      this.props.navigation.dispatch(navigateAction);
+      return
+    }
     const db = firebaseApp.firestore();
-    const updateDBRef = db.collection('users').doc(uid);
-    db.collection('user').doc(uid).set({
+    const updateDBRef = db.collection('users').doc(currentUser.uid);
+    db.collection('user').doc(currentUser.uid).set({
       firstname: this.state.firstname,
       lastname: this.state.lastname,
       email: this.state.email,

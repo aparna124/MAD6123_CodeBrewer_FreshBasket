@@ -25,7 +25,11 @@ class SignIn extends React.Component {
     firebaseApp.auth().signInWithEmailAndPassword(email, password)
     .then(() => {
       console.log(email);
-      this.props.navigation.navigate('Home')
+      const navigateAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: "Home" })],
+      });
+      this.props.navigation.dispatch(navigateAction);
       this.textInput1.clear()
       this.textInput2.clear()
     })
@@ -41,16 +45,17 @@ class SignIn extends React.Component {
   render()
   {
     return (
-
+    <ScrollView>
       <View style={styles.container}>
-        <View style={styles.header}>
-          {/* <Image source={require('./assets/logo.png')}/> */}
-          <Text style={styles.titleText}>
-            Login Here!
-          </Text>
-        </View>
+        
+          <View style={styles.header}>
+            {/* <Image source={require('./assets/logo.png')}/> */}
+            <Text style={styles.titleText}>
+              Login Here!
+            </Text>
+          </View>
 
-        <View style={styles.footer}>
+          <View style={styles.footer}>
 
             {/* Email */}
 
@@ -87,12 +92,17 @@ class SignIn extends React.Component {
             </View>
 
             <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('SignUp')}}>Register Here!</Text>
-            <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('Home')}}>Skip and Go to Home</Text>
+            <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{const navigateAction = StackActions.reset({
+                      index: 0,
+                      actions: [NavigationActions.navigate({ routeName: "Home" })],
+                    });
+                    this.props.navigation.dispatch(navigateAction);}}>Skip and Go to Home</Text>
             
 
         </View>
-
+        
       </View>
+    </ScrollView>
   );
   }  
 }
@@ -102,6 +112,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#75C34D',
     flex: 1,
+    paddingTop: 50,
   },
 
   header: {

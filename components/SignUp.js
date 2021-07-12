@@ -76,90 +76,93 @@ class SignUp extends React.Component   {
     const { navigate } = this.props.navigation;
 
     return (
+      <ScrollView>
       <View style={styles.container}>
-        <View style={styles.header}>
-          {/* <Image source={require('./assets/logo.png')}/> */}
-          <Text style={styles.titleText}>
-            Create an Account Here!
-          </Text>
-        </View>
+        
+          <View style={styles.header}>
+            {/* <Image source={require('./assets/logo.png')}/> */}
+            <Text style={styles.titleText}>
+              Create an Account Here!
+            </Text>
+          </View>
 
 
         
-        <View style={styles.footer}>
+          <View style={styles.footer}>
 
-            {/* Email */}
+              {/* Email */}
 
-            <Text style={[styles.text_footer, {marginTop: 15}, {paddingTop: 5}]}>Email</Text>
-            <View style={styles.action}>
-                <MaterialIcons 
-                name = 'mail-outline'
-                size = {20}
-                color = 'grey'
-                style = {styles.inputIcon}
-                />
-                <TextInput style={styles.TextInput} placeholder="Enter your Mail" autoCapitalize='none' value={this.state.email} onChangeText={(val) => this.updateInputVal(val, 'email')}></TextInput>
-            </View>
+              <Text style={[styles.text_footer, {marginTop: 15}, {paddingTop: 5}]}>Email</Text>
+              <View style={styles.action}>
+                  <MaterialIcons 
+                  name = 'mail-outline'
+                  size = {20}
+                  color = 'grey'
+                  style = {styles.inputIcon}
+                  />
+                  <TextInput style={styles.TextInput} placeholder="Enter your Mail" autoCapitalize='none' value={this.state.email} onChangeText={(val) => this.updateInputVal(val, 'email')}></TextInput>
+              </View>
 
-             {/* Password */}
+              {/* Password */}
 
-            <Text style={[styles.text_footer, {marginTop: 40}]}>Password</Text>
-            <View style={styles.action}>
-                <MaterialIcons 
-                name = 'lock-outline'
-                size = {20}
-                color = 'grey'
-                style = {styles.inputIcon}
-                />
-                <TextInput style={styles.TextInput} placeholder="Enter your Password" secureTextEntry={true} value={this.state.password} onChangeText={(val) => this.updateInputVal(val, 'password')}></TextInput>
-            </View>
+              <Text style={[styles.text_footer, {marginTop: 40}]}>Password</Text>
+              <View style={styles.action}>
+                  <MaterialIcons 
+                  name = 'lock-outline'
+                  size = {20}
+                  color = 'grey'
+                  style = {styles.inputIcon}
+                  />
+                  <TextInput style={styles.TextInput} placeholder="Enter your Password" secureTextEntry={true} value={this.state.password} onChangeText={(val) => this.updateInputVal(val, 'password')}></TextInput>
+              </View>
 
-             {/* First name */}
+              {/* First name */}
 
-             <Text style={[styles.text_footer, {marginTop: 40}]}>First Name</Text>
-             <View style={styles.action}>
-                <AntDesign 
-                name = 'user'
-                size = {20}
-                color = 'grey'
-                style = {styles.inputIcon}
-                />
-                <TextInput style={styles.TextInput} placeholder="First Name" value={this.state.firstname} onChangeText={(val) => this.updateInputVal(val, 'firstname')}></TextInput>
-            </View>
+              <Text style={[styles.text_footer, {marginTop: 40}]}>First Name</Text>
+              <View style={styles.action}>
+                  <AntDesign 
+                  name = 'user'
+                  size = {20}
+                  color = 'grey'
+                  style = {styles.inputIcon}
+                  />
+                  <TextInput style={styles.TextInput} placeholder="First Name" value={this.state.firstname} onChangeText={(val) => this.updateInputVal(val, 'firstname')}></TextInput>
+              </View>
 
-             {/* Last name */}
+              {/* Last name */}
 
-             <Text style={[styles.text_footer, {marginTop: 40}]}>Last Name</Text>
-             <View style={styles.action}>
-                <AntDesign 
-                name="user"
-                size = {20}
-                color = 'grey'
-                style = {styles.inputIcon}
-                />
-                <TextInput style={styles.TextInput} placeholder="Last Name" value={this.state.lastname} onChangeText={(val) => this.updateInputVal(val, 'lastname')}></TextInput>
-            </View>
+              <Text style={[styles.text_footer, {marginTop: 40}]}>Last Name</Text>
+              <View style={styles.action}>
+                  <AntDesign 
+                  name="user"
+                  size = {20}
+                  color = 'grey'
+                  style = {styles.inputIcon}
+                  />
+                  <TextInput style={styles.TextInput} placeholder="Last Name" value={this.state.lastname} onChangeText={(val) => this.updateInputVal(val, 'lastname')}></TextInput>
+              </View>
 
-            <View style={styles.signUpbutton}>
-                <TouchableOpacity style={[styles.signUp, {color: 'black'}]}>
-                     <Text style={styles.signbtnText} onPress={() => this.registerUser()}>SignUp</Text>
-                </TouchableOpacity>    
-            </View>
+              <View style={styles.signUpbutton}>
+                  <TouchableOpacity style={[styles.signUp, {color: 'black'}]}>
+                      <Text style={styles.signbtnText} onPress={() => this.registerUser()}>SignUp</Text>
+                  </TouchableOpacity>    
+              </View>
 
-            <View style={styles.signInbutton}>    
-                <Text style={[{textAlign: 'center'}, {marginTop: 5}]} onPress={()=>{this.props.navigation.navigate('SignIn')}}>Login Here!</Text>
-                <Text style={[{textAlign: 'center'}, {marginBottom: 15}, {marginTop: 25}]} onPress={()=>{
-                  const navigateAction = StackActions.reset({
-                    index: 0,
-                    actions: [NavigationActions.navigate({ routeName: "Home" })],
-                  });
-                  this.props.navigation.dispatch(navigateAction);
-                  }}>Skip and Go to Home
-                </Text>
-            </View>
-        </View>
-
+              <View style={styles.signInbutton}>    
+                  <Text style={[{textAlign: 'center'}, {marginTop: 5}]} onPress={()=>{this.props.navigation.navigate('SignIn')}}>Login Here!</Text>
+                  <Text style={[{textAlign: 'center'}, {marginBottom: 15}, {marginTop: 25}]} onPress={()=>{
+                    const navigateAction = StackActions.reset({
+                      index: 0,
+                      actions: [NavigationActions.navigate({ routeName: "Home" })],
+                    });
+                    this.props.navigation.dispatch(navigateAction);
+                    }}>Skip and Go to Home
+                  </Text>
+              </View>
+          </View>
+        
       </View>
+      </ScrollView>
   );
   }   
 }
@@ -169,6 +172,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#75C34D',
     flex: 1,
+    paddingTop: 50,
   },
 
   header: {

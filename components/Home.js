@@ -146,7 +146,7 @@ class Home extends React.Component {
     const { search } = this.state;
 
     return (
-      <SafeAreaView >
+      <SafeAreaView style={{flex:1}}>
         <View style={{ fbackgroundColor: "#75C34D", backgroundColor:"#75C34D", height:100 }}>
           <Image
               style={{ width: 40, height: 40, position: "absolute", left:10, top:50 }}
@@ -176,7 +176,7 @@ class Home extends React.Component {
               source={require('./offer.png')}
             />
             <Text style={styles.headingFont}>Top Seller</Text>
-            <View style={{ marginBottom: 60,}}>
+            <View style={{ marginBottom: 160,}}>
               { this.state.products.map((item, index) => (
             
                 <TouchableOpacity style={styles.item} onPress={() =>

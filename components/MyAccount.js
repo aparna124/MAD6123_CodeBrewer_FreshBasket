@@ -13,7 +13,7 @@ const ProfileRoute = () => (
 );
 
  
-export default function MyAccount() {
+export default function MyAccount(props) {
 
 
 
@@ -25,8 +25,8 @@ export default function MyAccount() {
   ]);
  
   const renderScene = SceneMap({
-    Profile: Profile,
-    MyOrders: MyOrders,
+    Profile: () => <Profile {...props}/>,
+    MyOrders: () => <MyOrders {...props}/>,
   });
  
   const renderTabBar = props => (

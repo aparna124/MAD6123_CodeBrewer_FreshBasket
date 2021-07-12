@@ -49,6 +49,7 @@ const TabNavigator = createBottomTabNavigator({
       return <IconComponent name={iconName} size={25} color={tintColor} />;
     },
   }),
+  initialRouteName:'Home',
   tabBarOptions: {
     activeTintColor: 'tomato',
     inactiveTintColor: '#75c34d',

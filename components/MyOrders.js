@@ -12,11 +12,11 @@ class MyOrders extends React.Component{
     const db = firebaseApp.firestore();
     const storage = firebaseApp.storage();
     
-    const userId = firebaseApp.auth().currentUser.uid;
-    if(userId == null || userId == undefined){
+    const currentUser = firebaseApp.auth().currentUser;
+    if(currentUser == null || currentUser == undefined){
       return;
     }
-    db.collection("order").where("userId", "==", userId).get().then((snapshot) => {
+    db.collection("order").where("userId", "==", currentUser.uid).get().then((snapshot) => {
       var orders = []
       var dataPromisies =[]
       snapshot.forEach((doc) => {
