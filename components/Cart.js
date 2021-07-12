@@ -35,15 +35,17 @@ fetchCartData()
   var userId;
   var products = [];
   var dataPromisies = [];
+  
   firebaseApp.auth().onAuthStateChanged(function (user) {
     if (user) {
+      
       userId = firebaseApp.auth().currentUser.uid;
       console.log(userId);
       let itemIdList;
       // let items;
 
       let count;
-      db.collection("cart2").doc(userId).get().then(function(doc){
+      db.collection("cart").doc(userId).get().then(function(doc){
         let items;
         items = doc.data().items;
         itemIdList = Object.keys(items);
@@ -98,14 +100,14 @@ deleteItem(productId) {
     if (user) {
 
     const userId = firebaseApp.auth().currentUser.uid;
-    firebaseApp.firestore().collection('cart2').doc(userId).get().then(function(doc){
+    firebaseApp.firestore().collection('cart').doc(userId).get().then(function(doc){
       let items;
       if(doc.exists)
       {
         items = doc.data().items;
         delete(items[productId]);
         //cartSave(items, userId);
-        firebaseApp.firestore().collection("cart2").doc(userId).set({
+        firebaseApp.firestore().collection("cart").doc(userId).set({
           items: items,
           userId:userId
         }).then(() => {
@@ -156,7 +158,7 @@ getItemsFromProducts(products)
 
 cartSave(items, userId)
 {
-  firebaseApp.firestore().collection("cart2").doc(userId).set({
+  firebaseApp.firestore().collection("cart").doc(userId).set({
     items: items,
     userId:userId
   }).then(() => {
@@ -195,22 +197,25 @@ render() {
                   <Text style={styles.itemText}>{item.name}</Text>
                   <Text style={styles.itemPrice}>$ {price}</Text>
                   <View style={styles.btns}>
-     
-                    <Button title = "+" onPress={() => this.IncrementItem(item.id)}/>
+
+
+                  <TouchableOpacity style={styles.increBtn} onPress={() => this.IncrementItem(item.id)}>
+                    <Text  style={styles.textBtn}>+</Text>
+                  </TouchableOpacity>
+                    {/* <Button title = "+" onPress={() => this.IncrementItem(item.id)}/> */}
                     <TextInput style={styles.input} placeholder= "Qty">{item.quantity}</TextInput>
-                    <Button title = "-" onPress={() => this.DecreaseItem(item.id)}/>
+
+                  <TouchableOpacity style={styles.decreBtn} onPress={() => this.DecreaseItem(item.id)}>
+                    <Text  style={styles.textBtn}>-</Text>
+                  </TouchableOpacity>
+                    {/* <Button title = "-" onPress={() => this.DecreaseItem(item.id)}/> */}
                   </View>
                 </View>
                 <View style={styles.delbutton}>
-                  {/* <AntDesign name="delete" size={24} color="#F07D4A" /> */}
+                      {/* <AntDesign name="delete" size={24} color="#F07D4A" onPress={() => this.deleteItem(item.id)}/> */}
                   <Button color="#F07D4A" title="Remove" onPress={() => this.deleteItem(item.id)}/>
                 </View>
-                
-                {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
-                {/* <TouchableOpacity style={styles.button}>
-                <Text  style={styles.textBtn} onPress={() => this.deleteItem(item.id)}>Remove</Text>
-                </TouchableOpacity> */}
-                
+              
               </View>
             </TouchableOpacity>
           )}}/>
@@ -247,8 +252,8 @@ const styles = StyleSheet.create({
   item: {
     width: '100%',
     padding: 10,
-    marginVertical: 8,
-    paddingRight: '20%',
+    marginVertical: 10,
+    paddingRight: '10%',
     borderColor: '#F4EDED',
     //backgroundColor: '#F4EDED',
     borderWidth: 3,
@@ -309,6 +314,24 @@ const styles = StyleSheet.create({
     width: 50,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+
+  increBtn:
+  {
+    backgroundColor: '#75C34D',
+    margin: 10,
+    width: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  decreBtn:
+  {
+    backgroundColor: '#75C34D',
+    margin: 10,
+    width: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   delbutton:

@@ -58,11 +58,12 @@ class ProductList extends React.Component {
   {
     
     var self = this;
-    firebaseApp.auth().onAuthStateChanged(function (user) {
-      if (user) {
+    // firebaseApp.auth().onAuthStateChanged(function (user) {
+      const userId = firebaseApp.auth().currentUser.uid;
+      if (userId) {
   
-        const userId = firebaseApp.auth().currentUser.uid;
-        firebaseApp.firestore().collection('cart2').doc(userId).get().then(function(doc){
+        
+        firebaseApp.firestore().collection('cart').doc(userId).get().then(function(doc){
           let items;
           if(doc.exists)
           {
@@ -77,11 +78,11 @@ class ProductList extends React.Component {
              items = {}
              items[productId] = 1;
           } 
-          firebaseApp.firestore().collection("cart2").doc(userId).set({
+          firebaseApp.firestore().collection("cart").doc(userId).set({
             items: items,
             userId:userId
           }).then(() => {
-              alert("Item added to cart");
+              alert("cart Item added to cart");
               console.log("Document successfully written!");
             }).catch((error) => {
               var errorCode = error.code;
@@ -96,7 +97,7 @@ class ProductList extends React.Component {
         alert("You have to sign in to add products");
         self.props.navigation.navigate('SignIn');
       }
-    });
+    // });
   }
 
 

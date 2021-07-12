@@ -81,7 +81,7 @@ class Checkout extends React.Component {
       //console.log(userId);
       let itemIdList;
       let items;
-      db.collection("cart2").doc(userId).get().then(function(doc){
+      db.collection("cart").doc(userId).get().then(function(doc){
         items = doc.data().items;
         itemIdList = Object.keys(items);
         count = itemIdList.length;
@@ -127,7 +127,7 @@ class Checkout extends React.Component {
       products: orders,
       totalPrice: this.state.total
     }
-    firebaseApp.firestore().collection("order123").doc().set(docData)
+    firebaseApp.firestore().collection("order").doc().set(docData)
       .then(() => {
         alert("Your order has been succesfully placed");
         self.deleteCart(userid);
@@ -142,12 +142,13 @@ class Checkout extends React.Component {
 
 deleteCart(userid) 
 {
-  var deleData = firebaseApp.firestore().collection('cart2').where('userId', '==', userid);
+  var self = this;
+  var deleData = firebaseApp.firestore().collection('cart').where('userId', '==', userid);
   deleData.get().then(function (querySnapshot) {
     querySnapshot.forEach(function (doc) {
       doc.ref.delete();
     });
-    this.props.navigation.navigate('Home');
+    self.props.navigation.navigate('Home');
   });
   
 }
