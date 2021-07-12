@@ -177,7 +177,7 @@ deleteCart(userid)
             <Text>Item1:</Text>
             <Text>Price</Text>
           </View> */}
-            <View style={styles.content}>
+        <View style={styles.content}>
          
          {
            this.state.products.map((item,key) => (
@@ -187,16 +187,21 @@ deleteCart(userid)
                    <Text style={styles.itemPrice}>${item.quantity * item.price[Object.keys(item.price)[0]]}</Text>
                </View>
 
-               
            </TouchableOpacity>
            ))
          }
       
        </View>
 
-       <View style={styles.priceText}>
+       {/* <View style={styles.priceText}>
 
         <Text style={styles.countText}>Total: ${this.state.total}</Text>
+       </View> */}
+        <View style={styles.priceText}>
+               <View style={styles.totalText}>
+                    <Text style={styles.totText}>Total: </Text>
+                    <Text style={styles.totText}>${this.state.total}</Text>
+               </View>
        </View>
                
           <Image
@@ -204,8 +209,8 @@ deleteCart(userid)
                 resizeMode: 'contain'}}
                 source = {require('./checkout.png')}
               />
-          <TouchableOpacity style={styles.button}>
-              <Text  style={styles.textBtn} onPress={() => this.dataToOrder()}>Make a Payment</Text>
+          <TouchableOpacity style={styles.button} onPress={() => this.dataToOrder()}>
+              <Text  style={styles.textBtn}>Make a Payment</Text>
           </TouchableOpacity>
   
       </View>
@@ -306,6 +311,7 @@ countText:
 checkoutText:
 {
   flexDirection: 'row',
+  display: 'flex',
 },
 
 button: {
@@ -326,37 +332,53 @@ textBtn: {
 cartItems:
 {
   flexDirection: 'row',
+  justifyContent: 'space-between'
 },
 
 itemName:
 {
   color: 'blue',
   fontSize: 20,
-  padding: 5,
-  paddingRight: 10,
+  padding: 10,
 },
 
 itemPrice:
 {
   color: 'blue',
   fontSize: 20,
-  padding: 5,
-  paddingRight: '10%',
+  padding: 10,
+
 },
 
 content:
 {
-  alignItems: 'center',
-  alignContent: 'center',
+  paddingLeft: '2%',
   borderBottomColor: 'black', 
   borderBottomWidth: 0.2, 
   width: '100%',
 },
 
 priceText:
-{
+{   
+
     paddingTop: '10%',
+    paddingLeft: '5%',
+    width: '100%',
+},
+
+totalText:
+{
+  flexDirection: 'row',
+  justifyContent: 'space-between'
+},
+
+totText:
+{
+  fontSize: 22,
+  fontWeight: 'bold',
 }
+
+
 
 
 

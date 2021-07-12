@@ -123,7 +123,7 @@ class Home extends React.Component {
             items: items,
             userId:userId
           }).then(() => {
-              alert("Home Item added to cart");
+              alert("Item added to cart");
               console.log("Document successfully written!");
             }).catch((error) => {
               var errorCode = error.code;
@@ -193,8 +193,8 @@ class Home extends React.Component {
                   <Text style={styles.itemText}>{item.name}</Text>
                   <Text style={styles.itemPrice}>$ {item.price[Object.keys(item.price)[0]]}</Text>
                   {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
-                  <TouchableOpacity style={styles.button}>
-                    <Text style={styles.textBtn} onPress={() => this.addTocart(item.id)}>Add</Text>
+                  <TouchableOpacity style={styles.button} onPress={() => this.addTocart(item.id)}>
+                    <Text style={styles.textBtn}>Add</Text>
                   </TouchableOpacity>
                 </TouchableOpacity>
                 ))

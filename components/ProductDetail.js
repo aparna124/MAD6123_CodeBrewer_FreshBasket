@@ -29,6 +29,52 @@ class ProductDetail extends React.Component {
     this.initCategory()
   }
 
+  addTocart(productId)
+  {
+    
+    var self = this;
+    // firebaseApp.auth().onAuthStateChanged(function (user) {
+      const userId = firebaseApp.auth().currentUser.uid;
+      if (userId) {
+  
+        
+        firebaseApp.firestore().collection('cart').doc(userId).get().then(function(doc){
+          let items;
+          if(doc.exists)
+          {
+            items = doc.data().items;
+            if(Object.keys(items).indexOf(productId) === -1 ){
+              items[productId] = 1;
+            }else{
+              items[productId]++;
+            }
+          }else{
+            // create new cart
+             items = {}
+             items[productId] = 1;
+          } 
+          firebaseApp.firestore().collection("cart").doc(userId).set({
+            items: items,
+            userId:userId
+          }).then(() => {
+              alert("Item added to cart");
+              console.log("Document successfully written!");
+            }).catch((error) => {
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              // ..
+              //window.alert("Error: " + errorMessage);
+            });
+        })
+    
+      }
+      else {
+        alert("You have to sign in to add products");
+        self.props.navigation.navigate('SignIn');
+      }
+    // });
+  }
+
   render() {
     if(this.state.product == null || undefined){
       return (<View/>)
@@ -57,6 +103,9 @@ class ProductDetail extends React.Component {
             <Text style={styles.itemDesc}>{this.state.product.details}</Text>
             <Text style={styles.itemtitle}>Ingredients</Text>
             <Text style={styles.itemDesc}>{this.state.product.ingredients}</Text>
+            <TouchableOpacity style={styles.button} onPress={() => this.addTocart(this.props.navigation.getParam('productId'))}>
+                <Text  style={styles.textBtn}>Add</Text>
+            </TouchableOpacity>
           </ScrollView>
         </SafeAreaView>
       </View>
@@ -104,7 +153,21 @@ const styles = StyleSheet.create({
   itemDesc: {
     marginBottom: 15,
     fontSize: 16,
-  }
+  },
+  button: {
+    width: '100%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    borderColor: '#75C34D',
+    borderWidth: 1,
+    backgroundColor: '#75C34D',
+  },
+  textBtn: {
+    color: '#FFF',
+    fontSize: 17,
+  },
 });
 
 export default ProductDetail;

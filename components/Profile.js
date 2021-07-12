@@ -72,7 +72,8 @@ class Profile extends Component {
   }
 
   updateUser()
-  {
+  { 
+
     const currentUser = firebaseApp.auth().currentUser;
     if( currentUser == null || currentUser == undefined){
       alert("you have to login")
@@ -86,7 +87,7 @@ class Profile extends Component {
     }
     const db = firebaseApp.firestore();
     const updateDBRef = db.collection('users').doc(currentUser.uid);
-    db.collection('user').doc(currentUser.uid).set({
+    db.collection("user").doc(firebaseApp.auth().currentUser.uid).set({
       firstname: this.state.firstname,
       lastname: this.state.lastname,
       email: this.state.email,
@@ -147,20 +148,24 @@ class Profile extends Component {
             <View>
                 <TextInput style={styles.TextInputAddress} onChangeText={address => this.setState({address})}>{this.state.address}</TextInput>
             </View>
-            <Button title="Save" style = {styles.inputIcon} onPress={() => this.updateUser()}/>
+            {/* <Button title="Save" style = {styles.inputIcon} onPress={() => this.updateUser()}/> */}
 
-            <View style={styles.profileFooter}/>
+            <TouchableOpacity style={styles.button} onPress={() => this.updateUser()}>
+                <Text  style={styles.textBtn}>Save</Text>
+            </TouchableOpacity>
+
+            {/* <View style={styles.profileFooter}/>
 
             <Text style={styles.profileFooterText}>Order Status</Text>
 
             <View style={styles.profileFooter}/>
 
-            <Text style={styles.profileFooterText}>Wallet</Text>
+            <Text style={styles.profileFooterText}>Wallet</Text> */}
 
             <View style={styles.profileFooter}/>
 
             <View style={styles.profileFooterBtn}>
-            <Button title="Logout" onPress={() => this.signOutUser()} />
+              <Button title="Logout" onPress={() => this.signOutUser()} />
             </View>
           
 
@@ -239,7 +244,22 @@ const styles = StyleSheet.create({
     paddingRight: '75%',
     color: 'red',
     fontSize: 20,
-  }
+  },
+  
+  button: {
+    margin: 12,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    borderColor: '#75C34D',
+    borderWidth: 1,
+    backgroundColor: '#75C34D',
+  },
+  textBtn: {
+    color: '#FFF',
+    fontSize: 17,
+  },
 
 });
 

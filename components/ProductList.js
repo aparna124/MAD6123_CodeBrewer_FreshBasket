@@ -82,7 +82,7 @@ class ProductList extends React.Component {
             items: items,
             userId:userId
           }).then(() => {
-              alert("cart Item added to cart");
+              alert("Item added to cart");
               console.log("Document successfully written!");
             }).catch((error) => {
               var errorCode = error.code;
@@ -127,8 +127,8 @@ class ProductList extends React.Component {
               <Text style={styles.itemText}>{item.name}</Text>
               <Text style={styles.itemPrice}>$ {price}</Text>
               {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
-              <TouchableOpacity style={styles.button}>
-                <Text  style={styles.textBtn} onPress={() => this.addTocart(item.id)}>Add</Text>
+              <TouchableOpacity style={styles.button} onPress={() => this.addTocart(item.id)}>
+                <Text  style={styles.textBtn}>Add</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           )}}/>

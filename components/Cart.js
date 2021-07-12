@@ -1,10 +1,11 @@
 import React from 'react';
-import { Text, View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Image, Button, TextInput, ScrollView} from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Image, Button, TextInput, ScrollView, Alert} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import {firebaseApp} from '../firebase-config';
 
@@ -212,8 +213,9 @@ render() {
                   </View>
                 </View>
                 <View style={styles.delbutton}>
-                      {/* <AntDesign name="delete" size={24} color="#F07D4A" onPress={() => this.deleteItem(item.id)}/> */}
-                  <Button color="#F07D4A" title="Remove" onPress={() => this.deleteItem(item.id)}/>
+                    {/* <AntDesign name="delete" size={24} color="#F07D4A" onPress={() => this.deleteItem(item.id)}/> */}
+                    <MaterialIcons name="delete" size={24} color="#F07D4A"onPress={() => Alert.alert("Delete", "Are you sure you want to delete this item?", [{text: "yes", onPress: () => this.deleteItem(item.id)}, {text: "No"}])}/>
+                  {/* <Button color="#F07D4A" title="Remove" onPress={() => this.deleteItem(item.id)}/> */}
                 </View>
               
               </View>
@@ -288,7 +290,9 @@ const styles = StyleSheet.create({
   },
   image: {
     flexGrow: 1,
-    resizeMode: 'center'
+    resizeMode: 'center',
+    width: 90, 
+    height: 90, 
   },
   button: {
     width: '100%',
