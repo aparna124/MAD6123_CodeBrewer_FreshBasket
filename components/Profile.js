@@ -75,16 +75,16 @@ class Profile extends Component {
   { 
 
     const currentUser = firebaseApp.auth().currentUser;
-    if( currentUser == null || currentUser == undefined){
-      alert("you have to login")
-      const navigateAction = StackActions.reset({
-        index: 0,
-        key: null,
-        actions: [NavigationActions.navigate({ routeName: 'SignIn' })],
-      });
-      this.props.navigation.dispatch(navigateAction);
-      return
-    }
+    // if( currentUser == null || currentUser == undefined){
+    //   alert("you have to login")
+    //   const navigateAction = StackActions.reset({
+    //     index: 0,
+    //     key: null,
+    //     actions: [NavigationActions.navigate({ routeName: 'SignIn' })],
+    //   });
+    //   this.props.navigation.dispatch(navigateAction);
+    //   return
+    // }
     const db = firebaseApp.firestore();
     const updateDBRef = db.collection('users').doc(currentUser.uid);
     db.collection("user").doc(firebaseApp.auth().currentUser.uid).set({
@@ -94,7 +94,8 @@ class Profile extends Component {
       contact: this.state.contact,
       address: this.state.address,
     }).then(() => {
-      console.log('User updated successfully!')}).catch(error =>{
+      console.log('User updated successfully!')
+      alert("User updated successfully!")}).catch(error =>{
       console.log(error);
     }) 
   }
