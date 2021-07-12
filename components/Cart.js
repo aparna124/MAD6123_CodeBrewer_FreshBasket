@@ -40,10 +40,11 @@ fetchCartData()
       userId = firebaseApp.auth().currentUser.uid;
       console.log(userId);
       let itemIdList;
-      let items;
+      // let items;
+
       let count;
-      
       db.collection("cart2").doc(userId).get().then(function(doc){
+        let items;
         items = doc.data().items;
         itemIdList = Object.keys(items);
         count = itemIdList.length; 
@@ -74,9 +75,10 @@ fetchCartData()
             })  
           }).catch((error) => console.log('error',error));
         }
-        else if(itemIdList.length == 0){
+        else{
           // empty cart
           alert("Your cart is empty");
+          self.props.navigation.navigate('Home');
         }
       });
     }
@@ -158,13 +160,13 @@ cartSave(items, userId)
     items: items,
     userId:userId
   }).then(() => {
-      alert("Document deleted succesfully!");
+      // alert("Document deleted succesfully!");
       fetchCartData();
     }).catch((error) => {
       var errorCode = error.code;
       var errorMessage = error.message;
       // ..
-      alert("Error: " + errorMessage);
+      // alert("Error: " + errorMessage);
     });
 }
 

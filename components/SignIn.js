@@ -80,8 +80,8 @@ class SignIn extends React.Component {
             </View>
 
             <View style={styles.signUpbutton}>
-                <TouchableOpacity style={[styles.signUp, {color: 'black'}]}>
-                     <Text style={styles.signbtnText} onPress={() => this.signIn()}>SignIn</Text>
+                <TouchableOpacity style={[styles.signUp, {color: 'black'}]} onPress={() => this.signIn()}>
+                     <Text style={styles.signbtnText}>SignIn</Text>
                 </TouchableOpacity>    
             </View>
 

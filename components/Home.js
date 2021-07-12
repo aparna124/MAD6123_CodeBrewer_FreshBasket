@@ -94,6 +94,52 @@ class Home extends React.Component {
 
   }
 
+
+  addTocart(productId)
+  {
+    
+    var self = this;
+    firebaseApp.auth().onAuthStateChanged(function (user) {
+      if (user) {
+  
+        const userId = firebaseApp.auth().currentUser.uid;
+        firebaseApp.firestore().collection('cart2').doc(userId).get().then(function(doc){
+          let items;
+          if(doc.exists)
+          {
+            items = doc.data().items;
+            if(Object.keys(items).indexOf(productId) === -1 ){
+              items[productId] = 1;
+            }else{
+              items[productId]++;
+            }
+          }else{
+            // create new cart
+             items = {}
+             items[productId] = 1;
+          } 
+          firebaseApp.firestore().collection("cart2").doc(userId).set({
+            items: items,
+            userId:userId
+          }).then(() => {
+              alert("Item added to cart");
+              console.log("Document successfully written!");
+            }).catch((error) => {
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              // ..
+              //window.alert("Error: " + errorMessage);
+            });
+        })
+    
+      }
+      else {
+        alert("You have to sign in to add products");
+        self.props.navigation.navigate('SignIn');
+      }
+    });
+  }
+
   render() {
 
     const { search } = this.state;

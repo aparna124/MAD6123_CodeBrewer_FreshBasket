@@ -16,8 +16,6 @@ class Checkout extends React.Component {
   {
     super(props)
     this.state = {address: '', products: [], total: 0}
-  
-
   }
 
   
@@ -58,10 +56,6 @@ class Checkout extends React.Component {
   fetchData()
   {
     this.state.products = this.props.navigation.state.params.products;
-    //console.log(this.state.products[1].id);
-  //   ranks.forEach(function (e) {
-  //     console.log(e);
-  // });
     var totalPrice = 0;
     this.state.products.forEach(function (element) {
       totalPrice = totalPrice + element.quantity*element.price[Object.keys(element.price)[0]];
@@ -135,9 +129,9 @@ class Checkout extends React.Component {
     }
     firebaseApp.firestore().collection("order123").doc().set(docData)
       .then(() => {
-        //console.log(orders);
-        console.log("Document successfully written!");
+        alert("Your order has been succesfully placed");
         self.deleteCart(userid);
+        // self.props.navigation.navigate('Home');
       }).catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -153,9 +147,8 @@ deleteCart(userid)
     querySnapshot.forEach(function (doc) {
       doc.ref.delete();
     });
-    window.location = 'index.html';
+    this.props.navigation.navigate('Home');
   });
-  console.log(deleData);
   
 }
 

@@ -57,6 +57,7 @@ class ProductList extends React.Component {
    addTocart(productId)
   {
     
+    var self = this;
     firebaseApp.auth().onAuthStateChanged(function (user) {
       if (user) {
   
@@ -93,6 +94,7 @@ class ProductList extends React.Component {
       }
       else {
         alert("You have to sign in to add products");
+        self.props.navigation.navigate('SignIn');
       }
     });
   }
