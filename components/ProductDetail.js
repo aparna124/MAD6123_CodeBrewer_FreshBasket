@@ -5,24 +5,25 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
+import axios from 'axios';
 
 import {firebaseApp} from '../firebase-config';
 
 class ProductDetail extends React.Component {
-  state = { products: null}
+  state = { product: null}
 
   initCategory() {
     console.log("initProducts")
-    const db = firebaseApp.firestore();
-    const storage = firebaseApp.storage();
-    
-    db.collection("products").doc(this.props.navigation.getParam('productId')).get().then((doc) => {
-      storage.ref(doc.data().image).getDownloadURL().then((url) => {
-        this.setState({product : { id: doc.id, imagePath: url, ...doc.data() }});
-      }).catch(() => {
-        this.setState({product : { id: doc.id, ...doc.data() }});
-      }) 
-    }).catch((error) => console.log('error',error));
+
+    const productId = this.props.navigation.getParam('productId')
+    if(productId != null && productId != undefined && productId != ''){
+    let url ='http://192.168.0.112:3000/product/' + productId
+    axios.get(url)
+      .then(res => {
+        this.setState({product: res.data})
+      })
+      .catch((error) => console.log('error',error));
+    }
   }
 
   componentDidMount(){
@@ -79,25 +80,23 @@ class ProductDetail extends React.Component {
     if(this.state.product == null || undefined){
       return (<View/>)
     }
-    const weight = Object.keys(this.state.product.price)[0]
-    const price = this.state.product.price[weight]
     
     return (
       <View style={styles.container}>
         <SafeAreaView>
           <ScrollView>
-            <View style={styles.imageView}>
+            {/* <View style={styles.imageView}>
               <Image
                 style={styles.image}
                 source={{
                   uri: this.state.product.imagePath,
                 }}
-              />
-            </View>
+              /> 
+            </View> */}
             <Text style={styles.itemText}>{this.state.product.name}</Text>
             <View style={styles.itemtitle}>
-              <Text style={styles.itemPrice}>$ {price}</Text>
-              <Text style={styles.itemWeight}>({weight} gram)</Text>
+              <Text style={styles.itemPrice}>$ {this.state.product.price}</Text>
+              <Text style={styles.itemWeight}>({this.state.product.weight} gram)</Text>
             </View>
             <Text style={styles.itemtitle}>Product Information</Text>
             <Text style={styles.itemDesc}>{this.state.product.details}</Text>

@@ -10,9 +10,12 @@ app.use(cors());
 app.options('*', cors());
 
 
+
 //Import Routes
 
 const postsRoute = require('./routes/post');
+const categoryRoute = require('./routes/category');
+const productRoute = require('./routes/product');
 
 
 //Routes
@@ -25,11 +28,13 @@ app.get('/', (req, res) => {
 //Connect to DB
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, (err) =>{
     if(err){
-    console.log(err);
+        console.log(err);
     }else{
         console.log('Connected to db');
     }
     app.use('/posts', postsRoute);
+    app.use('/category', categoryRoute);
+    app.use('/product', productRoute);
 })
 
 app.listen(3000);

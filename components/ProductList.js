@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
-
+import axios from 'axios';
 import {firebaseApp} from '../firebase-config';
 
 class ProductList extends React.Component {
@@ -13,56 +13,30 @@ class ProductList extends React.Component {
 
   initCategory() {
     console.log("initProducts")
-    const db = firebaseApp.firestore();
-    const storage = firebaseApp.storage();
-    
-    var products = [];
-    var dataPromisies = [];
-    console.log(this.props)
-    
-    var prodRef = db.collection("products")
+
     const catId = this.props.navigation.getParam('categoryId')
     const searchText = this.props.navigation.getParam('searchText')
-
+    let url ='http://192.168.0.112:3000/product'
     if(catId != null && catId != undefined && catId != ''){
-      const catRef = db.collection("categories").doc(catId)
-      prodRef = prodRef.where("category", "==", catRef)
-    } 
-    prodRef.get().then((snapshot) => {
-      snapshot.docs.forEach(doc => {
-        var details = doc.data().details;
-        var pName = doc.data().name.toLowerCase();
-        console.log('searchText',searchText)
-        if( searchText != null && searchText != undefined && !(searchText.toLowerCase().includes(pName) || details.includes(searchText.toLowerCase()))) {
-          return
-        }
-        dataPromisies.push(
-          storage.ref(doc.data().image).getDownloadURL().then((url) => {
-            products = [ ...products, { id: doc.id, imagePath: url, ...doc.data() }];
-          }).catch(() => {
-            products = [ ...products, { id: doc.id, ...doc.data() }];
-          })
-        );
-      })
-      Promise.all(dataPromisies).then(() => {
-        this.setState({products: products})
-      })  
-    }).catch((error) => console.log('error',error));
+      url = url + '?categoryId=' + catId
+    }
+    axios.get(url)
+      .then(res => {
+        this.setState({products: res.data})
+      });
   }
 
   componentDidMount(){
     this.initCategory()
   }
 
-   addTocart(productId)
+  addTocart(productId)
   {
     
     var self = this;
     // firebaseApp.auth().onAuthStateChanged(function (user) {
       const userId = firebaseApp.auth().currentUser.uid;
       if (userId) {
-  
-        
         firebaseApp.firestore().collection('cart').doc(userId).get().then(function(doc){
           let items;
           if(doc.exists)
@@ -111,23 +85,21 @@ class ProductList extends React.Component {
           numColumns={2}
           extraData={this.state}
           renderItem={({item}) => {
-            var price = item.price[Object.keys(item.price)[0]]
             return (
             <TouchableOpacity style={styles.item} onPress={() => 
-            this.props.navigation.navigate('ProductDetail', {productId: item.id})
+            this.props.navigation.navigate('ProductDetail', {productId: item._id})
             }>
-              <View style={styles.imageView}>
+              {/* <View style={styles.imageView}>
                 <Image
                   style={styles.image}
                   source={{
                     uri: item.imagePath,
                   }}
                 />
-              </View>
+              </View> */}
               <Text style={styles.itemText}>{item.name}</Text>
-              <Text style={styles.itemPrice}>$ {price}</Text>
-              {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
-              <TouchableOpacity style={styles.button} onPress={() => this.addTocart(item.id)}>
+              <Text style={styles.itemPrice}>$ {item.price}</Text>
+              <TouchableOpacity style={styles.button} onPress={() => this.addTocart(item._id)}>
                 <Text  style={styles.textBtn}>Add</Text>
               </TouchableOpacity>
             </TouchableOpacity>

@@ -1,16 +1,21 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack'
 
+
+
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import HomeScreen from './components/HomeScreen';
-import Category from './components/Category';
+// import Category from './components/Category';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
 import Profile from './components/Profile';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import MyAccount from './components/MyAccount'
+import adminCategoryList from './components/admin/CategoryList';
+import adminCategory from './components/admin/Category';
+import adminProduct from './components/admin/Product';
 
 const Navigator = createStackNavigator({
   
@@ -22,6 +27,9 @@ const Navigator = createStackNavigator({
   Home: { screen: HomeScreen, navigationOptions: {headerShown: false} },
   ProductDetail: { screen: ProductDetail },
   Checkout: {screen: Checkout},
+  adminCategoryList: { screen: adminCategoryList },
+  adminCategory: { screen: adminCategory },
+  adminProduct: { screen: adminProduct },
 },
 
 {
