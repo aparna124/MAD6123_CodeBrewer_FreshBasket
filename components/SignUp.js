@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 import { StackActions, NavigationActions } from 'react-navigation'; 
 import {firebaseApp} from '../firebase-config';
-
+import axios from "axios";
 
 class SignUp extends React.Component   {
 
@@ -46,13 +46,19 @@ class SignUp extends React.Component   {
         console.log(firebaseApp.auth().currentUser.uid);
         const uid = firebaseApp.auth().currentUser.uid;
         const db = firebaseApp.firestore();
-        db.collection('user').doc(uid).set({
-          firstname: this.state.firstname,
-          lastname: this.state.lastname,
-          email: this.state.email,
-          type: "user"
-          }).then(() => {
-        console.log('User registered successfully!')
+
+        // db.collection('user').doc(uid).set({
+        //   firstname: this.state.firstname,
+        //   lastname: this.state.lastname,
+        //   email: this.state.email,
+        //   type: "user"
+        //   })
+          axios.post("http://localhost:3000/posts",{
+            title: this.state.firstname,
+            description: this.state.lastname
+          })
+          .then(() => {
+        alert('User registered successfully!')
         this.setState({
           isLoading: false,
           email: '', 
