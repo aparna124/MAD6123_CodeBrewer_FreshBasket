@@ -53,9 +53,12 @@ class SignUp extends React.Component   {
         //   email: this.state.email,
         //   type: "user"
         //   })
-          axios.post("http://localhost:3000/posts",{
-            title: this.state.firstname,
-            description: this.state.lastname
+          axios.post("http://localhost:3000/user",{
+            firstname: this.state.firstname,
+            lastname: this.state.lastname,
+            email: this.state.email,
+            password: this.state.password,
+            type: "user"
           })
           .then(() => {
         alert('User registered successfully!')

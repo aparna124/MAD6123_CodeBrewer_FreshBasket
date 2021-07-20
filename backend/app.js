@@ -14,6 +14,7 @@ app.options('*', cors());
 //Import Routes
 
 const postsRoute = require('./routes/post');
+const authRoute = require('./routes/auth');
 const categoryRoute = require('./routes/category');
 const productRoute = require('./routes/product');
 
@@ -33,6 +34,7 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, (err) =>{
         console.log('Connected to db');
     }
     app.use('/posts', postsRoute);
+    app.use('/user', authRoute);
     app.use('/category', categoryRoute);
     app.use('/product', productRoute);
 })
