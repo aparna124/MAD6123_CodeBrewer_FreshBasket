@@ -35,19 +35,19 @@ class Home extends React.Component {
 
     var self = this;
     var topsellers = [];
-    console.log("Top seller");
+    //console.log("Top seller");
     firebaseApp.firestore().collection("order").get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         var len = Object.keys(doc.data().products).length;
         //console.log(len);
         for (var i = 0; i < len; i++) {
-          console.log(doc.data().products[i].quantity);
+          //console.log(doc.data().products[i].quantity);
           var orderQty = doc.data().products[i].quantity;
           if (orderQty >= 2) {
             //displayTopSellerItems();
             var pName = doc.data().products[i].productname;
             if (topsellers.includes(pName)) {
-              console.log("Item already displayed");
+              //console.log("Item already displayed");
             }
             else {
               topsellers.push(pName);
@@ -86,7 +86,7 @@ class Home extends React.Component {
         });
         Promise.all(dataPromisies).then(() => {
           self.setState({ products: products })
-          console.log(this.state.products.length)
+          //console.log(this.state.products.length)
         })
       }).catch((error) => console.log('error', error));
 
@@ -124,7 +124,7 @@ class Home extends React.Component {
             userId:userId
           }).then(() => {
               alert("Item added to cart");
-              console.log("Document successfully written!");
+              //console.log("Document successfully written!");
             }).catch((error) => {
               var errorCode = error.code;
               var errorMessage = error.message;

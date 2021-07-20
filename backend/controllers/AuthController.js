@@ -53,6 +53,7 @@ const login = (req, res, next) =>
     var email = req.body.email
     var password = req.body.password
 
+
     User.findOne({$or: [{email: email}]})
     .then(user => {
         if(user)
@@ -68,11 +69,15 @@ const login = (req, res, next) =>
                 }
                 if(result)
                 {
-                    let token = jwt.sign({firstname: user.firstname}, 'verySecretValue', {expiresIn: '1h'})
+                    let token = jwt.sign({firstname: user.firstname}, 'verySecretValue', {expiresIn: '1h'});
+                    //const type = User.find().select({ type: 1}).where({email: user.email})
+                    console.log(user);
                     res.json({
 
                         message: 'Login Succesful!',
-                        token
+                        userType: user.type,
+                        token: token
+                        
                     })
                 }
                 else

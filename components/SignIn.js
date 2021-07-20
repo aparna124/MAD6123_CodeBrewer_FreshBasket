@@ -27,13 +27,31 @@ class SignIn extends React.Component {
             email: this.state.email,
             password: this.state.password,
           })
-    .then(() => {
-      console.log(email);
-      const navigateAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: "Home" })],
-      });
-      this.props.navigation.dispatch(navigateAction);
+    .then((res) => {
+      
+      console.log(res.data);
+      if(res.data.userType === "user")
+      {
+        const navigateAction = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: "Home" })],
+        });
+        this.props.navigation.dispatch(navigateAction);
+      }
+
+      else
+      {
+        const navigateAction = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: "adminCategoryList" })],
+        });
+        this.props.navigation.dispatch(navigateAction);
+      }
+      
+
+
+
+
       this.textInput1.clear()
       this.textInput2.clear()
     })
