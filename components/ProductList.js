@@ -7,7 +7,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import {firebaseApp} from '../firebase-config';
-
+import {HOST_URL} from '../commonConfig'
 class ProductList extends React.Component {
   state = { products: '',}
 
@@ -16,7 +16,7 @@ class ProductList extends React.Component {
 
     const catId = this.props.navigation.getParam('categoryId')
     const searchText = this.props.navigation.getParam('searchText')
-    let url ='http://192.168.0.112:3000/product'
+    let url =HOST_URL + 'product'
     if(catId != null && catId != undefined && catId != ''){
       url = url + '?categoryId=' + catId
     }

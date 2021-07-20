@@ -3,25 +3,26 @@ import axios from 'axios';
 import { SafeAreaView, ScrollView, FlatList, StyleSheet, Text, Button, TouchableOpacity, View, Image, TextInput } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import {HOST_URL} from '../../commonConfig'
-export default class Category extends Component {
-  
-  state = { categories: ''}
 
-  initCategory() {
-    console.log("initCategory")
+export default class Product extends Component {
+  
+  state = { products: ''}
+
+  initProduct() {
+    console.log("initProduct")
     
-    axios.get(HOST_URL + 'category')
+    axios.get(HOST_URL + 'product')
       .then(res => {
-        this.setState({categories: res.data})
+        this.setState({products: res.data})
       });
   }
 
   componentDidMount(){
-    this.initCategory()
+    this.initProduct()
     this.willFocusSubscription = this.props.navigation.addListener(
         'willFocus',
         () => {
-          this.initCategory();
+          this.initProduct();
         }
       );
   }
@@ -30,51 +31,52 @@ export default class Category extends Component {
   }
 
 
-    editCategory(categoryId){
-        this.props.navigation.navigate('adminCategory', {categoryId})
+    editProduct(productId){
+        this.props.navigation.navigate('adminProduct', {productId})
     }
 
-    deleteCategory(categoryId){
-        axios.delete(HOST_URL + 'category/'+ categoryId)
+    deleteProduct(productId){
+        axios.delete(HOST_URL + 'product/'+ productId)
         .then(res => {
-            this.initCategory()
+            this.initProduct()
         }); 
     }
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.signUpbutton}>
-            <TouchableOpacity style={[styles.signUp]} onPress={()=>{this.props.navigation.navigate('adminCategory')}}>
-                <Text style={[{textAlign: 'center'}]} >Add New Category</Text>
+            <TouchableOpacity style={[styles.signUp]} onPress={()=>{this.props.navigation.navigate('adminProduct')}}>
+                <Text style={[{textAlign: 'center'}]} >Add New Product</Text>
             </TouchableOpacity>
         </View>
         <SafeAreaView>
-          <FlatList
-          data={this.state.categories}
+        <FlatList
+          data={this.state.products}
           extraData={this.state}
-          renderItem={({item}) => (
-              <View style={styles.item}>
-                {/* <View style={styles.imageView}>
-                  <Image
-                    style={styles.image}
-                    source={{
-                      uri: item.imagePath,
-                    }}
-                  />
-                </View> */}
-                <Text style={styles.itemText}>{item.name}</Text>
-                {/* <Text style={styles.productCount}>{item.count}</Text> */}
-                <TouchableOpacity style={styles.item} onPress={() => this.editCategory( item._id)}>
+          renderItem={({item}) => {
+            return (
+            <TouchableOpacity style={styles.item} onPress={() => 
+            this.props.navigation.navigate('ProductDetail', {productId: item._id})
+            }>
+              {/* <View style={styles.imageView}>
+                <Image
+                  style={styles.image}
+                  source={{
+                    uri: item.imagePath,
+                  }}
+                />
+              </View> */}
+              <Text style={styles.itemText}>{item.name}</Text>
+              <Text style={styles.itemPrice}>$ {item.price}</Text>
+              <TouchableOpacity style={styles.button} onPress={() => this.editProduct( item._id)}>
                     <AntDesign style={styles.rightIcon} name="edit" size={24} color="black" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.item} onPress={() => this.deleteCategory( item._id)}>
+                <TouchableOpacity style={styles.button} onPress={() => this.deleteProduct( item._id)}>
                     <AntDesign style={styles.rightIcon} name="delete" size={24} color="black" />
                 </TouchableOpacity>
-              </View>
-          )}/>
-        </SafeAreaView>
-        <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('adminProductList')}}>Go to Product List</Text>
-      </View>
+            </TouchableOpacity>
+          )}}/>
+        </SafeAreaView></View>
     )
   }
 }
@@ -120,6 +122,19 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   item: {
+    flexDirection: 'row',
+    padding: 10,
+    marginVertical: 8,
+    borderColor: '#000',
+    // backgroundColor: '#e2ffd4',
+    borderWidth: 1,
+    borderRadius: 5,
+    alignItems: 'center',
+    // shadowColor: '#000',
+    // shadowRadius: 6,
+    // shadowOpacity: 1,  
+  },
+  button: {
     padding: 12,
     borderColor: '#000',
     // backgroundColor: '#e2ffd4',
@@ -132,9 +147,13 @@ const styles = StyleSheet.create({
   itemText: {
     marginLeft: 10,
     marginTop: 3,
-    flexGrow: 2,
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  itemPrice: {
+    marginLeft: 10,
+    flex: 2,
+    marginTop: 4,
   },
   imageView: {
     display: 'flex',

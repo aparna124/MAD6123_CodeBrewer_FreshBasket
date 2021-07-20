@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
-
+import {HOST_URL} from '../commonConfig'
 import {firebaseApp} from '../firebase-config';
 
 class ProductDetail extends React.Component {
@@ -17,7 +17,7 @@ class ProductDetail extends React.Component {
 
     const productId = this.props.navigation.getParam('productId')
     if(productId != null && productId != undefined && productId != ''){
-    let url ='http://192.168.0.112:3000/product/' + productId
+    let url =HOST_URL + 'product/' + productId
     axios.get(url)
       .then(res => {
         this.setState({product: res.data})

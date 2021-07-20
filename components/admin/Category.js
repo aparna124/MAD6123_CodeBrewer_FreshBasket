@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { SafeAreaView, ScrollView, StyleSheet, Text, Button, TouchableOpacity, View, Image, TextInput } from 'react-native';
-
+import {HOST_URL} from '../../commonConfig'
 export default class Category extends Component {
   constructor(props) {
     super(props);
@@ -20,7 +20,7 @@ export default class Category extends Component {
   componentDidMount(){
     const categoryId = this.props.navigation.getParam('categoryId')
     if(categoryId != null && categoryId != undefined && categoryId != ''){
-        axios.get('http://192.168.0.112:3000/category/' +categoryId)
+        axios.get(HOST_URL + 'category/' +categoryId)
         .then( res => {
           this.setState({
             categoryId: res.data._id,
@@ -38,7 +38,7 @@ export default class Category extends Component {
       categoryName: this.state.categoryName
     }
     if(this.state.categoryId != null && this.state.categoryId != undefined && this.state.categoryId != ''){
-      axios.put('http://192.168.0.112:3000/category/' + this.state.categoryId, category)
+      axios.put(HOST_URL + 'category/' + this.state.categoryId, category)
       .then(res => {
         console.log(res.data)
         this.setState({
@@ -47,7 +47,7 @@ export default class Category extends Component {
         this.props.navigation.pop()
       });
     } else {
-      axios.post('http://192.168.0.112:3000/category/add', category)
+      axios.post(HOST_URL + 'category/add', category)
         .then(res => {
           console.log(res.data)
           this.setState({

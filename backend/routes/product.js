@@ -23,6 +23,29 @@ router.route('/:id').get((req,res) => {
             .catch(err => res.status(400).json('Error:' + err));
 });
 
+router.route('/:id').put((req,res) => {
+    const productId = req.params.id
+    const name = req.body.productName;
+    const category = req.body.categoryId;
+    const image = '';
+    const weight = req.body.productWeight;
+    const price = req.body.productPrice;
+    const details = req.body.productDescription;
+    const ingredients = req.body.productIngredients;
+
+
+    Product.findByIdAndUpdate(productId, {name, category, image, weight, price, details, ingredients})
+        .then(() => res.json('Product Updated.'))
+        .catch(err => res.status(400).json('Error:' + err));
+});
+
+router.route('/:id').delete((req,res) => {
+    const productId = req.params.id
+    Product.findByIdAndDelete(productId)
+        .then(() => res.json('Product Deleted.'))
+        .catch(err => res.status(400).json('Error:' + err));
+});
+
 router.route('/add').post((req,res) => {
     const name = req.body.productName;
     const category = req.body.categoryId;

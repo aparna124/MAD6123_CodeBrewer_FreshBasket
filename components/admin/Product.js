@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { SafeAreaView, ScrollView, StyleSheet, Text, Button, TouchableOpacity, View, Image, TextInput } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-
+import {HOST_URL} from '../../commonConfig'
 
 export default class Product extends Component {
   constructor(props) {
@@ -11,8 +11,8 @@ export default class Product extends Component {
     this.state = {
       productName: '',
       categoryId: '',
-      productWeight: '',
-      productPrice: 0.0,
+      productWeight: '0',
+      productPrice: '0.0',
       productDescription: '',
       productIngredients: '',
       categories:[]
@@ -20,15 +20,33 @@ export default class Product extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://192.168.0.112:3000/category')
-      .then(res => {
-        this.setState({categories: res.data})
+    const productId = this.props.navigation.getParam('productId')
+    axios.get(HOST_URL + 'category')
+      .then(catRes => {
         console.log('category loaded')
+        if(productId != null && productId != undefined && productId != ''){
+          axios.get(HOST_URL + 'product/' +productId)
+          .then( res => {
+            this.setState({
+              productId: res.data._id,
+              productName: res.data.name,
+              categoryId: res.data.category,
+              productWeight: res.data.weight.toString(),
+              productPrice: res.data.price.toString(),
+              productDescription: res.data.details,
+              productIngredients: res.data.ingredients,
+              categories: catRes.data,
+            })
+          }).catch(() =>{
+            alert("Error")
+            this.props.navigation.pop()
+          })
+        } else {
+          this.setState({categories: catRes.data})
+        }
       });
   }
   
-  
-
   updateInputVal = (val, prop) => {
     const state = this.state;
     state[prop] = val;
@@ -44,26 +62,46 @@ export default class Product extends Component {
       productDescription: this.state.productDescription,
       productIngredients: this.state.productIngredients
     }
-
-    console.log(product);
-
-    axios.post('http://192.168.0.112:3000/product/add', product)
+    if(this.state.productId != null && this.state.productId != undefined && this.state.productId != ''){
+      axios.put(HOST_URL + 'product/' + this.state.productId, product)
       .then(res => {
         console.log(res.data)
         this.setState({
-          productName: ''
+          productName: '',
+          categoryId: '',
+          productWeight: '0',
+          productPrice: '0.0',
+          productDescription: '',
+          productIngredients: '',
         })
-    });
-    
+        this.props.navigation.pop()
+      });
+    } else {
+      axios.post(HOST_URL + 'product/add', product)
+        .then(res => {
+          console.log(res.data)
+          this.setState({
+            productName: '',
+            categoryId: '',
+            productWeight: '0',
+            productPrice: '0.0',
+            productDescription: '',
+            productIngredients: '',
+          })
+          this.props.navigation.pop()
+      });
+    }
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView>
+      <ScrollView>
+        <View style={styles.container}>
           <Text style={styles.titleText}>Create New Product</Text>
           <View>
             <TextInput style={styles.TextInput} placeholder="Type product name" value={this.state.productName} onChangeText={(val) => this.updateInputVal(val, 'productName')}/>
-            <Picker  style={styles.TextInput} 
+            <Picker style={styles.TextInput} 
               selectedValue={this.state.categoryId}
               onValueChange={(itemValue, itemIndex) =>
                 this.updateInputVal(itemValue, 'categoryId')
@@ -75,18 +113,20 @@ export default class Product extends Component {
                 }
             </Picker>
 
-            <TextInput style={styles.TextInput} placeholder="Type product weight" value={this.state.productWeight} onChangeText={(val) => this.updateInputVal(val, 'productWeight')}/>
-            <TextInput style={styles.TextInput} placeholder="Type product price" value={this.state.productPrice} onChangeText={(val) => this.updateInputVal(val, 'productPrice')}/>
+            <TextInput style={styles.TextInput} placeholder="Type product weight" keyboardType='numeric' value={this.state.productWeight} onChangeText={(val) => this.updateInputVal(val, 'productWeight')}/>
+            <TextInput style={styles.TextInput} placeholder="Type product price" keyboardType='numeric' value={this.state.productPrice} onChangeText={(val) => this.updateInputVal(val, 'productPrice')}/>
             <TextInput style={styles.TextInput} placeholder="Type product description" value={this.state.productDescription} onChangeText={(val) => this.updateInputVal(val, 'productDescription')}/>
             <TextInput style={styles.TextInput} placeholder="Type product Ingredients" value={this.state.productIngredients} onChangeText={(val) => this.updateInputVal(val, 'productIngredients')}/>
           </View>
           <View style={styles.signUpbutton}>
               <TouchableOpacity style={[styles.signUp, {color: 'black'}]} onPress={this.onSubmit}>
-                  <Text style={styles.signbtnText}>Add New Product</Text>
+                  <Text style={styles.signbtnText}>{this.state.productId != null && this.state.productId != undefined && this.state.productId != '' ? 'Update' : 'Add New Product' }</Text>
               </TouchableOpacity>    
           </View>
          
-      </View>
+        </View>
+      </ScrollView>
+      </SafeAreaView>
     )
   }
 }
@@ -96,6 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     flex: 1,
     padding: 20,
+    paddingBottom:60
   },
   titleText:
   {

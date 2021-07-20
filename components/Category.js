@@ -1,4 +1,5 @@
 import React from 'react';
+import {HOST_URL} from '../commonConfig'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -13,7 +14,7 @@ class Category extends React.Component {
   initCategory() {
     console.log("initCategory")
     
-    axios.get('http://192.168.0.112:3000/category')
+    axios.get(HOST_URL + 'category')
       .then(res => {
         this.setState({categories: res.data})
       });
