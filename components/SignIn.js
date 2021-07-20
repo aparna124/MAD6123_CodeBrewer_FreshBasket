@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import {firebaseApp} from '../firebase-config';
 import { StackActions, NavigationActions } from 'react-navigation'; 
+import axios from "axios";
 
 
 class SignIn extends React.Component {
@@ -20,9 +21,12 @@ class SignIn extends React.Component {
     console.log("Working");
     const email = this.state.email;
     const password = this.state.password;
-    // this.state({error: '', isLoading: true});
-    // const{email, password} = this.state;
-    firebaseApp.auth().signInWithEmailAndPassword(email, password)
+    
+    // firebaseApp.auth().signInWithEmailAndPassword(email, password)
+    axios.post("http://localhost:3000/user/login",{
+            email: this.state.email,
+            password: this.state.password,
+          })
     .then(() => {
       console.log(email);
       const navigateAction = StackActions.reset({
