@@ -98,6 +98,13 @@ const login = (req, res, next) =>
     })
 }
 
+const logout = (req, res, next) =>
+{
+    console.log(jwt);
+    res.cookie('jwt', '', {maxAge: 1});
+    console.log(jwt);
+}
+
 module.exports = {
-    register, login
+    register, login, logout
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { SafeAreaView, ScrollView, FlatList, StyleSheet, Text, Button, TouchableOpacity, View, Image, TextInput } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import {firebaseApp} from '../../firebase-config';
 import {HOST_URL} from '../../commonConfig'
 export default class Category extends Component {
   
@@ -40,6 +41,26 @@ export default class Category extends Component {
             this.initCategory()
         }); 
     }
+
+    signOutUser = async () => 
+    {
+      var self = this;
+      try {
+          await firebaseApp.auth().signOut();
+  
+          // const navigateAction = StackActions.reset({
+          //   index: 0,
+          //   key: null,
+          //   actions: [NavigationActions.navigate({ routeName: 'SignIn' })],
+          // });
+          self.props.navigation.navigate('SignIn');
+  
+      } catch (e) {
+          console.log(e);
+      }
+
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -74,6 +95,7 @@ export default class Category extends Component {
           )}/>
         </SafeAreaView>
         <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('adminProductList')}}>Go to Product List</Text>
+        <Button title="Logout" onPress={() => this.signOutUser()} />
       </View>
     )
   }

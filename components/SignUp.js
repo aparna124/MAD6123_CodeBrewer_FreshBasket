@@ -45,7 +45,7 @@ class SignUp extends React.Component   {
       .then((res) => {
         console.log(firebaseApp.auth().currentUser.uid);
         const uid = firebaseApp.auth().currentUser.uid;
-        const db = firebaseApp.firestore();
+        //const db = firebaseApp.firestore();
 
         // db.collection('user').doc(uid).set({
         //   firstname: this.state.firstname,

@@ -22,45 +22,42 @@ class SignIn extends React.Component {
     const email = this.state.email;
     const password = this.state.password;
     
-    // firebaseApp.auth().signInWithEmailAndPassword(email, password)
-    axios.post("http://localhost:3000/user/login",{
-            email: this.state.email,
-            password: this.state.password,
-          })
-    .then((res) => {
+    firebaseApp.auth().signInWithEmailAndPassword(email, password).then(() =>
+    {
+      axios.post("http://localhost:3000/user/login",{
+        email: this.state.email,
+        password: this.state.password,
+      }).then((res) => {
       
-      console.log(res.data);
-      if(res.data.userType === "user")
-      {
-        const navigateAction = StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: "Home" })],
-        });
-        this.props.navigation.dispatch(navigateAction);
-      }
-
-      else
-      {
-        const navigateAction = StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: "adminCategoryList" })],
-        });
-        this.props.navigation.dispatch(navigateAction);
-      }
+        console.log(res.data);
+        if(res.data.userType === "user")
+        {
+          const navigateAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: "Home" })],
+          });
+          this.props.navigation.dispatch(navigateAction);
+        }
+  
+        else
+        {
+          const navigateAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: "adminCategoryList" })],
+          });
+          this.props.navigation.dispatch(navigateAction);
+        }
       
-
-
-
-
-      this.textInput1.clear()
-      this.textInput2.clear()
+        this.textInput1.clear()
+        this.textInput2.clear()
+      }).catch((e) => {
+        console.log(e);
+        console.log("Not a valid user");
+        alert("Not a valid user");
+        this.setState({error: 'Authentication failed', isLoading: false})
+      })
     })
-    .catch((e) => {
-      console.log(e);
-      console.log("Not a valid user");
-      alert("Not a valid user");
-      this.setState({error: 'Authentication failed', isLoading: false})
-    })
+    
   }
 
 
@@ -120,7 +117,7 @@ class SignIn extends React.Component {
                     });
                     this.props.navigation.dispatch(navigateAction);}}>Skip and Go to Home</Text>
 
-            <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('adminCategoryList')}}>Go to admin</Text>
+            {/* <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('adminCategoryList')}}>Go to admin</Text> */}
             
 
         </View>

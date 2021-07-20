@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, TextInput, Button } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import {firebaseApp} from '../firebase-config';
-import { StackActions, NavigationActions } from 'react-navigation'
+import { StackActions, NavigationActions } from 'react-navigation';
+import axios from "axios";
 
 class Profile extends Component {
 
@@ -50,7 +51,7 @@ class Profile extends Component {
 
   componentDidMount(){
     // console.log('parent',this.props.navigation)
-    this.fetchData();
+    // this.fetchData();
   }
 
   signOutUser = async () => 
@@ -69,7 +70,13 @@ class Profile extends Component {
     } catch (e) {
         console.log(e);
     }
-  }
+
+    //self.props.navigation.navigate('SignIn');
+    // axios.get("http://localhost:3000/user/logout").then(() => {
+    //   console.log('logout')
+    
+ // });
+}
 
   updateUser()
   { 
