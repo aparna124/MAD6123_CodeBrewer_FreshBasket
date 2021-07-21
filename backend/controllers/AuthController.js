@@ -19,23 +19,12 @@ const register = (req, res, next) => {
             lastname: req.body.lastname,
             email: req.body.email,
             password: hashedpass,
-            type: req.body.type
+            type: req.body.type,
+            userid: req.body.userid,
+            contact: req.body.contact,
+            address: req.body.address
         })
     
-        // user.save()
-        // then(user =>{
-        //     res.json({
-    
-        //         message: 'User added succesfully'
-        //     })
-        // })
-        // .catch(error => {
-    
-        //     res.json({
-                
-        //         message: 'An error occured'
-        //     })
-        // })
         user.save()
         .then(data => {
     
@@ -52,8 +41,7 @@ const login = (req, res, next) =>
 {
     var email = req.body.email
     var password = req.body.password
-
-
+ 
     User.findOne({$or: [{email: email}]})
     .then(user => {
         if(user)

@@ -27,7 +27,23 @@ const UserSchema = new Schema({
     type:
     {
         type: String
+    },
+    
+    userid:
+    {
+        type: String
+    },
+
+    contact:
+    {
+        type: String
+    },
+
+    address:
+    {
+        type: String
     }
+
 
 }, {timestamps: true} )
 

@@ -58,7 +58,8 @@ class SignUp extends React.Component   {
             lastname: this.state.lastname,
             email: this.state.email,
             password: this.state.password,
-            type: "user"
+            type: "user",
+            userid: firebaseApp.auth().currentUser.uid,
           })
           .then(() => {
         alert('User registered successfully!')

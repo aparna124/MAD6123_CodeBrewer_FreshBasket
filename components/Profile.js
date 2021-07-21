@@ -11,7 +11,7 @@ class Profile extends Component {
  constructor(props)
  {
    super(props);
-   this.state = {firstname: '', lastname: '', email: '', contact: '', address: ''};
+   this.state = {firstname: '', lastname: '', email: '', contact: '', address: '', user: null};
   //  this.fetchData = this.fetchData();
  }
     
@@ -19,6 +19,7 @@ class Profile extends Component {
   {
     let self = this;
     const currentUser = firebaseApp.auth().currentUser;
+    const uid = currentUser.uid;
     if( currentUser == null || currentUser == undefined){
       alert("you have to login")
       const navigateAction = StackActions.reset({
@@ -29,20 +30,24 @@ class Profile extends Component {
       self.props.navigation.dispatch(navigateAction);
       return
     }
-    const db = firebaseApp.firestore();
-    db.collection("user").doc(currentUser.uid).get() 
-    .then(function(doc)
+    
+    //db.collection("user").doc(currentUser.uid).get() 
+    
+     axios.get("http://localhost:3000/profile?userid=" +uid)
+    .then(res =>
     {
       
-        if(doc.exists)
-        {
-          self.setState({firstname: doc.data().firstname});
-          self.setState({lastname: doc.data().lastname});
-          self.setState({email: doc.data().email});
-          self.setState({contact: doc.data().contact});
-          self.setState({address: doc.data().address});
-          console.log(self.state.firstname);
-        } 
+        //console.log(res.data[0].lastname);
+        //console.log(res.data.userid);
+        // if(res.exists)
+        // {
+          self.setState({firstname: res.data[0].firstname});
+          self.setState({lastname: res.data[0].lastname});
+          self.setState({email: res.data[0].email});
+          self.setState({contact: res.data[0].contact});
+          self.setState({address: res.data[0].address});
+        //   //console.log(self.state.firstname);
+        // } 
     }).catch(function(error){
       console.log("error", error);
     })
@@ -51,7 +56,7 @@ class Profile extends Component {
 
   componentDidMount(){
     // console.log('parent',this.props.navigation)
-    // this.fetchData();
+    this.fetchData();
   }
 
   signOutUser = async () => 
@@ -81,7 +86,8 @@ class Profile extends Component {
   updateUser()
   { 
 
-    const currentUser = firebaseApp.auth().currentUser;
+    const uid = firebaseApp.auth().currentUser.uid;
+    console.log(uid);
     // if( currentUser == null || currentUser == undefined){
     //   alert("you have to login")
     //   const navigateAction = StackActions.reset({
@@ -92,19 +98,25 @@ class Profile extends Component {
     //   this.props.navigation.dispatch(navigateAction);
     //   return
     // }
-    const db = firebaseApp.firestore();
-    const updateDBRef = db.collection('users').doc(currentUser.uid);
-    db.collection("user").doc(firebaseApp.auth().currentUser.uid).set({
+    const user = {
       firstname: this.state.firstname,
       lastname: this.state.lastname,
       email: this.state.email,
       contact: this.state.contact,
       address: this.state.address,
-    }).then(() => {
-      console.log('User updated successfully!')
-      alert("User updated successfully!")}).catch(error =>{
-      console.log(error);
-    }) 
+    }
+
+      axios.put("http://localhost:3000/profile?userid=" +uid, user)
+      .then(res => {
+        console.log(res.data)
+        this.setState({
+          firstname: this.state.firstname,
+          lastname: this.state.lastname,
+          email: this.state.email,
+          contact: this.state.contact,
+          address: this.state.address,
+        })
+      });
   }
 
     render() {
@@ -126,7 +138,7 @@ class Profile extends Component {
     
             
             {/* First name */}
-            <Text style={[styles.text_footer, {margin: 12}, {fontSize: 20}]}>Last Name</Text>
+            <Text style={[styles.text_footer, {margin: 12}, {fontSize: 15}]}>First Name</Text>
              <View> 
                 <TextInput style={styles.resultText} onChangeText={firstname => this.setState({firstname})}>{this.state.firstname}</TextInput>
             </View> 
@@ -134,19 +146,19 @@ class Profile extends Component {
 
 
              {/* Last name */}
-             <Text style={[styles.text_footer, {margin: 12}, {fontSize: 20}]}>Last Name</Text>
+             <Text style={[styles.text_footer, {margin: 12}, {fontSize: 15}]}>Last Name</Text>
              <View>
                 <TextInput style={styles.resultText} onChangeText={lastname => this.setState({lastname})}>{this.state.lastname}</TextInput>
             </View>
 
             {/* Email */}
-           <Text style={[styles.text_footer, {margin: 12}, {fontSize: 20}]}>Email</Text>
+           <Text style={[styles.text_footer, {margin: 12}, {fontSize: 15}]}>Email</Text>
             <View>
                 <TextInput style={styles.resultText} onChangeText={email => this.setState({email})}>{this.state.email}</TextInput>
             </View>
 
             {/* Contact */}
-            <Text style={[styles.text_footer, {margin: 12}, {fontSize: 20}]}>Contact</Text>
+            <Text style={[styles.text_footer, {margin: 12}, {fontSize: 15}]}>Contact</Text>
             <View>
                 <TextInput style={styles.resultText} onChangeText={contact => this.setState({contact})}>{this.state.contact}</TextInput>
             </View>

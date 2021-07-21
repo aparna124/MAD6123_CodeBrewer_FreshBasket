@@ -9,12 +9,13 @@ app.use(bodyParser.json());
 app.use(cors());
 app.options('*', cors());
 
-
+mongoose.set('useFindAndModify', false);
 
 //Import Routes
 
 const postsRoute = require('./routes/post');
 const authRoute = require('./routes/auth');
+const userRoute = require('./routes/user');
 const categoryRoute = require('./routes/category');
 const productRoute = require('./routes/product');
 
@@ -35,8 +36,10 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, (err) =>{
     }
     app.use('/posts', postsRoute);
     app.use('/user', authRoute);
+    app.use('/profile', userRoute);
     app.use('/category', categoryRoute);
     app.use('/product', productRoute);
+    
 })
 
 app.listen(3000);

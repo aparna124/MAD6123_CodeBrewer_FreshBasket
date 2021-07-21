@@ -33,6 +33,7 @@ router.route('/:id').put((req,res) => {
     const details = req.body.productDescription;
     const ingredients = req.body.productIngredients;
 
+    console.log(req);
 
     Product.findByIdAndUpdate(productId, {name, category, image, weight, price, details, ingredients})
         .then(() => res.json('Product Updated.'))
