@@ -39,14 +39,22 @@ class ProductList extends React.Component {
       if (userId) {
         axios.get("http://localhost:3000/cart/get-by-user-id?userId=" +userId).then(function(doc){
           let items;
-          if(doc.data) // check doc is not empty object ({})
+          if(doc) // check doc is not empty object ({})
           {
             console.log("Inside if doc");
+            // console.log(doc.data);
             items = doc.data.items;
-            if(Object.keys(items).indexOf(productId) === -1 ){
+            // console.log(items);
+            console.log(items[0]);
+            console.log(productId);
+            if(Object.keys(items[0]).indexOf(productId) === -1 ){
               items[productId] = 1;
+              console.log("Entered into");
+              console.log(items[productId]);
             }else{
               items[productId]++;
+              console.log("Entered into else");
+              console.log(items[productId]);
             }
           }
 
@@ -66,7 +74,7 @@ class ProductList extends React.Component {
             items: items,
             userId:userId
           }
-            axios.post("http://localhost:3000/cart?userid=" +userId, cart)
+            axios.put("http://localhost:3000/cart?userid=" +userId, cart)
             .then(res => {
               alert("Item added to cart");
             }).catch((error) => {

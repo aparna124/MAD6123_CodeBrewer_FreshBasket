@@ -3,7 +3,7 @@ const router = express.Router()
 const CartController = require('../controllers/CartController');
 const Cart = require('../models/Cart');
 
-router.route('/').post((req,res) => {
+router.route('/').put((req,res) => {
     const userid =  req.query.userid;
     const items = req.body.items;
     const userId = req.body.userId;
@@ -11,21 +11,21 @@ router.route('/').post((req,res) => {
     console.log(userid);
     console.log(items);
 
-    // Cart.updateOne({userId: userid} , {items: items, userId: userId},
-    //     function(err, numberAffected, rawResponse) {
-    //             //handle it
-    //          })
-    //         .then(() => res.json('Item added to cart as updation'))
-    //         .catch(err => res.status(400).json('Error:' + err)); 
+    Cart.updateOne({userId: userid} , {items: items, userId: userId},
+        function(err, numberAffected, rawResponse) {
+                //handle it
+             })
+            .then(() => res.json('Item added to cart as updation'))
+            .catch(err => res.status(400).json('Error:' + err)); 
     
     
-    const newProduct = new Cart({items: items, userId: userId});
+    // const newProduct = new Cart({items: items, userId: userId});
 
-    newProduct.save()
-        .then(() => {
-            res.json('Product Added.')
-        })
-        .catch(err => res.status(400).json('Error:' + err));
+    // newProduct.save()
+    //     .then(() => {
+    //         res.json('Product Added.')
+    //     })
+    //     .catch(err => res.status(400).json('Error:' + err));
     
 });
 
