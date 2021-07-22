@@ -1,57 +1,61 @@
-const Cart = require('../models/Cart')
+const Cart = require("../models/Cart");
 
-const add = (req, res, next) => {
+const createOrUpdateCart = (req, res, next) => {
+  const userId = req.body.userId;
+  const cartId = req.body.cartId || null;
+  const items = req.body.items;
 
-    // let cart = new Cart({
+  if (cartId === null) {
+    const cart = new Cart({ userId: userId, items: items });
+    cart.save().then(() => {
+      res.sendStatus(204);
+    });
+  } else {
+    Cart.findOneAndUpdate(
+      { _id: cartId },
+      {
+        $set: {
+          items: items,
+        },
+      }
+    )
+      .then(() => {
+        res.sendStatus(204);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  }
+};
 
-        
-    // })
+const clearCart = (req, res, next) => {
+  const cartId = req.body.cartId;
+  Cart.deleteOne({ _id: cartId })
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+};
 
-    // user.save()
-    //     .then(data => {
-
-    //         res.json(data);
-    //     })
-    //     .catch(err => {
-    //         res.json({ Message: err });
-    //     })
-}
-
-const getCartByUserId = (req, res, next) =>{
-    const userId = req.query.userId
-    const filter = {
-        userId: userId
-    }
-    Cart.find(filter)
-            .then(carts => {
-                if(carts.length >0)
-                    res.json(carts[0]);
-                else{
-                    res.json({})
-                }
-            })
-            .catch(err => res.status(400).json('Error:' + err));
-}
-
-
-
-/**
-           * post request to create/update cart
-           * cartId: doc._id,
-           * items,
-           * userId
-           * --
-           * if(cartId==null){
-           *    create a new cart with items and userId
-           * }else{
-           *    update (cartId)-> set items and userID
-           * cart = get by Id (cartID)
-           * cart.items = items;
-           * cart.save()
-           * }
-           */
+const getCartByUserId = (req, res, next) => {
+  const userId = req.query.userId;
+  const filter = {
+    userId: userId,
+  };
+  Cart.find(filter)
+    .then((carts) => {
+      if (carts.length > 0) res.json(carts[0]);
+      else {
+        res.json({});
+      }
+    })
+    .catch((err) => res.status(400).json("Error:" + err));
+};
 
 module.exports = {
-    add,
-    getCartByUserId
-}
+  getCartByUserId,
+  createOrUpdateCart,
+  clearCart,
+};
