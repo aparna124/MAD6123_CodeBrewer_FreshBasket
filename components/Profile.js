@@ -37,17 +37,11 @@ class Profile extends Component {
     .then(res =>
     {
       
-        //console.log(res.data[0].lastname);
-        //console.log(res.data.userid);
-        // if(res.exists)
-        // {
           self.setState({firstname: res.data[0].firstname});
           self.setState({lastname: res.data[0].lastname});
           self.setState({email: res.data[0].email});
           self.setState({contact: res.data[0].contact});
           self.setState({address: res.data[0].address});
-        //   //console.log(self.state.firstname);
-        // } 
     }).catch(function(error){
       console.log("error", error);
     })
@@ -75,12 +69,6 @@ class Profile extends Component {
     } catch (e) {
         console.log(e);
     }
-
-    //self.props.navigation.navigate('SignIn');
-    // axios.get("http://localhost:3000/user/logout").then(() => {
-    //   console.log('logout')
-    
- // });
 }
 
   updateUser()

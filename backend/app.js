@@ -18,6 +18,7 @@ const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
 const categoryRoute = require('./routes/category');
 const productRoute = require('./routes/product');
+const cartRoute = require('./routes/cart');
 
 
 //Routes
@@ -39,7 +40,7 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, (err) =>{
     app.use('/profile', userRoute);
     app.use('/category', categoryRoute);
     app.use('/product', productRoute);
-    
+    app.use('/cart', cartRoute);
 })
 
 app.listen(3000);

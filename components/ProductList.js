@@ -37,33 +37,63 @@ class ProductList extends React.Component {
     // firebaseApp.auth().onAuthStateChanged(function (user) {
       const userId = firebaseApp.auth().currentUser.uid;
       if (userId) {
-        firebaseApp.firestore().collection('cart').doc(userId).get().then(function(doc){
+        axios.get("http://localhost:3000/cart/get-by-user-id?userId=" +userId).then(function(doc){
           let items;
-          if(doc.exists)
+          if(doc.data) // check doc is not empty object ({})
           {
-            items = doc.data().items;
+            console.log("Inside if doc");
+            items = doc.data.items;
             if(Object.keys(items).indexOf(productId) === -1 ){
               items[productId] = 1;
             }else{
               items[productId]++;
             }
-          }else{
+          }
+
+          else
+          {
             // create new cart
              items = {}
              items[productId] = 1;
           } 
-          firebaseApp.firestore().collection("cart").doc(userId).set({
+          /**
+           * post request to create/update cart
+           * cartId: doc._id/null,
+           * items,
+           * userId
+           */
+           const cart = {
             items: items,
             userId:userId
-          }).then(() => {
+          }
+            axios.post("http://localhost:3000/cart?userid=" +userId, cart)
+            .then(res => {
               alert("Item added to cart");
-              console.log("Document successfully written!");
             }).catch((error) => {
               var errorCode = error.code;
               var errorMessage = error.message;
               // ..
               //window.alert("Error: " + errorMessage);
             });
+
+
+
+
+
+
+
+          // firebaseApp.firestore().collection("cart").doc(userId).set({
+          //   items: items,
+          //   userId:userId
+          // }).then(() => {
+          //     alert("Item added to cart");
+          //     console.log("Document successfully written!");
+          //   }).catch((error) => {
+          //     var errorCode = error.code;
+          //     var errorMessage = error.message;
+          //     // ..
+          //     //window.alert("Error: " + errorMessage);
+          //   });
         })
     
       }

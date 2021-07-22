@@ -31,7 +31,7 @@ fetchCartData()
 {
 
   var self = this;
-  const db = firebaseApp.firestore();
+  //const db = firebaseApp.firestore();
   const storage = firebaseApp.storage();
   var userId;
   var products = [];
@@ -57,10 +57,7 @@ fetchCartData()
             snapshot.docs.forEach(doc => {
               if( itemIdList.indexOf(doc.id) !== -1)
               {
-                //console.log(items[doc.id])
-                //this.state.quantity = items[doc.id];
-                //self.setState({quantity: items[doc.id]});
-                //console.log(self.state.quantity);
+               
                 dataPromisies.push(
                 storage.ref(doc.data().image).getDownloadURL().then((url) => {
                 products = [ ...products, { id: doc.id, imagePath: url, quantity: items[doc.id], ...doc.data() }];
