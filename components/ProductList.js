@@ -47,18 +47,30 @@ class ProductList extends React.Component {
         .get("http://localhost:3000/cart/get-by-user-id?userId=" + userId)
         .then(function (doc) {
           let items;
-          if (Object.keys(obj).length == 0) {
-            console.log("Inside if doc");
-            // console.log(doc.data);
-            items = doc.items;
+          if (Object.keys(doc).length == 0) {
+        
+            items = doc.data.items;
             // console.log(items);
-            console.log(items[0]);
-            console.log(productId);
-            if (Object.keys(items[0]).indexOf(productId) === -1) {
+            //console.log(items[0]);
+            console.log("Product id is" +productId);
+
+ 
+
+            // const map = new Map(Object.entries(items[0]));
+            // map.get(productId);
+            // console.log(map.get(productId));
+
+            for (let [key, value] of Object.entries(items[0])) {console.log(`${key}: ${value}`);}
+        
+            if (Object.keys(items[0]).indexOf(productId) === -1) 
+            {
+               //for (let [key, value] of Object.entries(items[0])) {console.log(`${key}: ${value}`);}
               items[productId] = 1;
               console.log("Entered into");
-              console.log(items[productId]);
-            } else {
+              //console.log(items[productId]);
+            } 
+            else 
+            {
               items[productId]++;
               console.log("Entered into else");
               console.log(items[productId]);
@@ -70,7 +82,7 @@ class ProductList extends React.Component {
           }
 
           axios
-            .post("http://localhost:3000/create-or-update", {
+            .post("http://localhost:3000/cart/create-or-update", {
               userId: userId,
               items: items,
               cartId: doc._id || null,
