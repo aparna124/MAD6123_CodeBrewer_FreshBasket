@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
+import axios from "axios";
 
 import {firebaseApp} from '../firebase-config';
 import color from 'color';
@@ -81,32 +82,61 @@ class Checkout extends React.Component {
       //console.log(userId);
       let itemIdList;
       let items;
-      db.collection("cart").doc(userId).get().then(function(doc){
-        items = doc.data().items;
+      axios
+      .get("http://localhost:3000/cart/get-by-user-id?userId=" + userId).then(function(doc){
+        items = doc.data.items;
         itemIdList = Object.keys(items);
         count = itemIdList.length;
         //console.log(itemIdList);
         if(itemIdList.length > 0){
-          db.collection("products").get().then((snapshot) => {
-            snapshot.docs.forEach(doc => {
-              if( itemIdList.indexOf(doc.id) !== -1)
+
+          axios.get("http://localhost:3000/product").then((res) => {
+            //console.log(res.data);
+            res.data.forEach(element => {
+              //console.log(element._id);
+              if(itemIdList.indexOf(element._id) !== -1)
               {
-              
-                console.log(items[doc.id]);
                 var obj = {
-                          category: doc.data().category,
-                          image: doc.data().image,
-                          productname: doc.data().name,
-                          productprice: doc.data().price,
-                          quantity: items[doc.id],
-                        }
-                orders.push(obj);
-                console.log(orders);
-                //displayCart(doc, items[doc.id])
+                            category: element.category,
+                            //image: element.image,
+                            productname: element.name,
+                            productprice: element.price,
+                            quantity: items[element._id],
+                                }
+                        //console.log(obj);
+                        orders.push(obj);
               }
             });
-           self.addToOrder(orders, userId);
-          })
+            self.addToOrder(orders, userId);
+          });
+
+
+
+
+
+          // db.collection("products").get().then((snapshot) => {
+          //   snapshot.docs.forEach(doc => {
+          //     if( itemIdList.indexOf(doc.id) !== -1)
+          //     {
+              
+          //       console.log(items[doc.id]);
+          //       var obj = {
+          //                 category: doc.data().category,
+          //                 image: doc.data().image,
+          //                 productname: doc.data().name,
+          //                 productprice: doc.data().price,
+          //                 quantity: items[doc.id],
+          //               }
+          //       orders.push(obj);
+          //       console.log(orders);
+          //       //displayCart(doc, items[doc.id])
+          //     }
+          //   });
+          //  self.addToOrder(orders, userId);
+          // })
+
+
+
         }
         else{
           // empty cart
@@ -120,18 +150,15 @@ class Checkout extends React.Component {
   addToOrder(orders, userid) 
   {
     var self = this;
-    var docData = {
+    axios.post("http://localhost:3000/order/add", {
       orderId: Date.now().toString(),
       userId: userid,
       status: "Ordered",
       products: orders,
       totalPrice: this.state.total
-    }
-    firebaseApp.firestore().collection("order").doc().set(docData)
+    })
       .then(() => {
         alert("Your order has been succesfully placed");
-        self.deleteCart(userid);
-        // self.props.navigation.navigate('Home');
       }).catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -139,6 +166,29 @@ class Checkout extends React.Component {
        alert("Error: " + errorMessage);
       });
   }
+
+  // addToOrder(orders, userid) 
+  // {
+  //   var self = this;
+  //   var docData = {
+  //     orderId: Date.now().toString(),
+  //     userId: userid,
+  //     status: "Ordered",
+  //     products: orders,
+  //     totalPrice: this.state.total
+  //   }
+  //   firebaseApp.firestore().collection("order").doc().set(docData)
+  //     .then(() => {
+  //       alert("Your order has been succesfully placed");
+  //       self.deleteCart(userid);
+  //       // self.props.navigation.navigate('Home');
+  //     }).catch((error) => {
+  //       var errorCode = error.code;
+  //       var errorMessage = error.message;
+  //       // ..
+  //      alert("Error: " + errorMessage);
+  //     });
+  // }
 
 deleteCart(userid) 
 {
