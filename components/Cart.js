@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import axios from "axios";
 
 import {firebaseApp} from '../firebase-config';
 
@@ -41,39 +42,69 @@ fetchCartData()
     if (user) {
       
       userId = firebaseApp.auth().currentUser.uid;
-      console.log(userId);
+      //console.log(userId);
       let itemIdList;
       // let items;
 
       let count;
-      db.collection("cart").doc(userId).get().then(function(doc){
+      //db.collection("cart").doc(userId).get().then(function(doc)
+      axios
+      .get("http://localhost:3000/cart/get-by-user-id?userId=" + userId).then(function(doc){
         let items;
-        items = doc.data().items;
+        items = doc.data.items;
         itemIdList = Object.keys(items);
         count = itemIdList.length; 
+
+        //console.log(itemIdList);
+    
         //console.log(items[doc.productId]);
-        if(itemIdList.length > 0){
-          db.collection("products").get().then((snapshot) => {
-            snapshot.docs.forEach(doc => {
-              if( itemIdList.indexOf(doc.id) !== -1)
+        if(itemIdList.length > 0)
+        {
+
+
+          axios.get("http://localhost:3000/product").then((res) => {
+            //console.log(res.data);
+            res.data.forEach(element => {
+              //console.log(element._id);
+              if(itemIdList.indexOf(element._id) !== -1)
               {
-               
-                dataPromisies.push(
-                storage.ref(doc.data().image).getDownloadURL().then((url) => {
-                products = [ ...products, { id: doc.id, imagePath: url, quantity: items[doc.id], ...doc.data() }];
-              }).catch(() => {
-                products = [ ...products, { id: doc.id, quantity: items[doc.id], ...doc.data() }];
-              })
-              );
-            }
+                 console.log(element);
+                 products = [ ...products, { id: element._id, imagePath: "", quantity: items[element._id], ...element}];
+              }
             });
+            self.setState({ products: products});
+          });
+
+
+
+
+          // db.collection("products").get().then((snapshot) => {
+          //   snapshot.docs.forEach(doc => {
+          //     if( itemIdList.indexOf(doc.id) !== -1)
+          //     {
+               
+          //       dataPromisies.push(
+          //       storage.ref(doc.data().image).getDownloadURL().then((url) => {
+          //       products = [ ...products, { id: doc.id, imagePath: url, quantity: items[doc.id], ...doc.data() }];
+          //     }).catch(() => {
+          //       products = [ ...products, { id: doc.id, quantity: items[doc.id], ...doc.data() }];
+          //     })
+          //     );
+          //   }
+
+
+
+          //   });
            
-            Promise.all(dataPromisies).then(() => {
-              self.setState({products: products})
-              console.log(items[doc.id])
+          //   Promise.all(dataPromisies).then(() => {
+          //     self.setState({products: products})
+          //     console.log(items[doc.id])
               
-            })  
-          }).catch((error) => console.log('error',error));
+          //   })  
+          // }).catch((error) => console.log('error',error));
+
+
+
         }
         else{
           // empty cart
@@ -179,7 +210,7 @@ render() {
           data={this.state.products}
           extraData={this.state}
           renderItem={({item}) => {
-            var price = item.price[Object.keys(item.price)[0]]
+            //var price = item.price[Object.keys(item.price)[0]]
             return (
             <TouchableOpacity style={styles.item}>
               <View style={styles.content}>
@@ -193,7 +224,7 @@ render() {
                 </View>
                 <View style={styles.contentText}>
                   <Text style={styles.itemText}>{item.name}</Text>
-                  <Text style={styles.itemPrice}>$ {price}</Text>
+                  <Text style={styles.itemPrice}>$ {item.price}</Text>
                   <View style={styles.btns}>
 
 

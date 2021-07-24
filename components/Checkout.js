@@ -58,7 +58,7 @@ class Checkout extends React.Component {
     this.state.products = this.props.navigation.state.params.products;
     var totalPrice = 0;
     this.state.products.forEach(function (element) {
-      totalPrice = totalPrice + element.quantity*element.price[Object.keys(element.price)[0]];
+      totalPrice = totalPrice + element.quantity*element.price;
       console.log(totalPrice);
     });
     this.setState({total: totalPrice});
@@ -184,7 +184,7 @@ deleteCart(userid)
            <TouchableOpacity>
                <View style={styles.cartItems}>
                    <Text style={styles.itemName}>{item.name}({item.quantity})</Text>
-                   <Text style={styles.itemPrice}>${item.quantity * item.price[Object.keys(item.price)[0]]}</Text>
+                   <Text style={styles.itemPrice}>${item.quantity * item.price}</Text>
                </View>
 
            </TouchableOpacity>
