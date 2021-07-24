@@ -6,7 +6,7 @@ var CartSchema = new Schema({
 
     items: 
     {
-        type: Array
+        type: Object
     },
 
     userId: 

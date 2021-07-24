@@ -47,22 +47,13 @@ class ProductList extends React.Component {
         .get("http://localhost:3000/cart/get-by-user-id?userId=" + userId)
         .then(function (doc) {
           let items;
-          if (Object.keys(doc).length == 0) {
+          //console.log(Object.keys(doc.data));
+          if (Object.keys(doc.data).length != 0) {
         
             items = doc.data.items;
-            // console.log(items);
-            //console.log(items[0]);
             console.log("Product id is" +productId);
-
- 
-
-            // const map = new Map(Object.entries(items[0]));
-            // map.get(productId);
-            // console.log(map.get(productId));
-
-            for (let [key, value] of Object.entries(items[0])) {console.log(`${key}: ${value}`);}
         
-            if (Object.keys(items[0]).indexOf(productId) === -1) 
+            if (Object.keys(items).indexOf(productId) === -1) 
             {
                //for (let [key, value] of Object.entries(items[0])) {console.log(`${key}: ${value}`);}
               items[productId] = 1;
@@ -82,10 +73,11 @@ class ProductList extends React.Component {
           }
 
           axios
-            .post("http://localhost:3000/cart/create-or-update", {
+            .post("http://localhost:3000/cart/create-or-update", 
+            {
               userId: userId,
               items: items,
-              cartId: doc._id || null,
+              cartId: doc.data._id || null,
             })
             .then((res) => {
               alert("Item added to cart");

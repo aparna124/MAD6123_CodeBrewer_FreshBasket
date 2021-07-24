@@ -4,7 +4,13 @@ const createOrUpdateCart = (req, res, next) => {
   const userId = req.body.userId;
   const cartId = req.body.cartId || null;
   const items = req.body.items;
+
   console.log(userId);
+
+
+  console.log(items);
+
+  
   if (cartId === null) {
     const cart = new Cart({ userId: userId, items: items });
     cart.save().then(() => {
