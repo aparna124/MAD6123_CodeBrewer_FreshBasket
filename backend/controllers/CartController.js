@@ -35,15 +35,37 @@ const createOrUpdateCart = (req, res, next) => {
 };
 
 const clearCart = (req, res, next) => {
-  const cartId = req.body.cartId;
+  const cartId = req.query.cartId;
+  console.log(cartId);
   Cart.deleteOne({ _id: cartId })
     .then(() => {
       res.sendStatus(204);
+      console.log("yes deleted");
     })
     .catch((err) => {
       res.status(500).send(err);
+      console.log("Not deleted");
     });
 };
+
+
+
+// const clearCart = (req, res, next) => {
+//   const cartId = req.query.cartId;
+//   console.log("cartId")
+//   Cart.deleteOne({ _id: cartId })
+//     .then(() => {
+//       res.sendStatus(204);
+//       console.log("yes deleted");
+//     })
+//     .catch((err) => {
+//       res.status(500).send(err);
+//       console.log("Not deleted");
+//     });
+// };
+
+
+
 
 const getCartByUserId = (req, res, next) => {
   const userId = req.query.userId;
@@ -63,5 +85,5 @@ const getCartByUserId = (req, res, next) => {
 module.exports = {
   getCartByUserId,
   createOrUpdateCart,
-  clearCart,
+  clearCart
 };

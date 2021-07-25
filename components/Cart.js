@@ -124,24 +124,28 @@ fetchCartData()
 }
 
 
+
 deleteItem(productId) {
   var self = this;
   firebaseApp.auth().onAuthStateChanged(function (user) {
     if (user) {
 
     const userId = firebaseApp.auth().currentUser.uid;
-    firebaseApp.firestore().collection('cart').doc(userId).get().then(function(doc){
+    axios.get("http://localhost:3000/cart/get-by-user-id?userId=" + userId).then(function(doc){
       let items;
-      if(doc.exists)
+      if(doc)
       {
-        items = doc.data().items;
-        delete(items[productId]);
-        //cartSave(items, userId);
-        firebaseApp.firestore().collection("cart").doc(userId).set({
-          items: items,
-          userId:userId
-        }).then(() => {
-            alert("Document deleted succesfully!");
+          items = doc.data.items
+          delete(items[productId]);
+          console.log(items)
+          axios
+          .post("http://localhost:3000/cart/create-or-update", 
+          {
+            userId: userId,
+            items: items,
+            cartId: doc.data._id || null,
+          }).then(() => {
+            alert("Item deleted succesfully!");
             self.fetchCartData();
           }).catch((error) => {
             var errorCode = error.code;
@@ -149,11 +153,58 @@ deleteItem(productId) {
             // ..
             //alert("Error: " + errorMessage);
           });
-      } 
+          
+      }; 
+        // delete(items[productId]);
+       
+        // firebaseApp.firestore().collection("cart").doc(userId).set({
+        //   items: items,
+        //   userId:userId
+        // }).then(() => {
+        //     alert("Document deleted succesfully!");
+        //     self.fetchCartData();
+        //   }).catch((error) => {
+        //     var errorCode = error.code;
+        //     var errorMessage = error.message;
+        //     // ..
+        //     //alert("Error: " + errorMessage);
+        //   });
+       
     })
     }
   })
 }
+
+// deleteItem(productId) {
+//   var self = this;
+//   firebaseApp.auth().onAuthStateChanged(function (user) {
+//     if (user) {
+
+//     const userId = firebaseApp.auth().currentUser.uid;
+//     firebaseApp.firestore().collection('cart').doc(userId).get().then(function(doc){
+//       let items;
+//       if(doc.exists)
+//       {
+//         items = doc.data().items;
+//         delete(items[productId]);
+//         //cartSave(items, userId);
+//         firebaseApp.firestore().collection("cart").doc(userId).set({
+//           items: items,
+//           userId:userId
+//         }).then(() => {
+//             alert("Document deleted succesfully!");
+//             self.fetchCartData();
+//           }).catch((error) => {
+//             var errorCode = error.code;
+//             var errorMessage = error.message;
+//             // ..
+//             //alert("Error: " + errorMessage);
+//           });
+//       } 
+//     })
+//     }
+//   })
+// }
 
 IncrementItem = (productId) => {
   console.log("Incrementing");
@@ -186,21 +237,46 @@ getItemsFromProducts(products)
  return items;
 }
 
+
 cartSave(items, userId)
 {
-  firebaseApp.firestore().collection("cart").doc(userId).set({
-    items: items,
-    userId:userId
-  }).then(() => {
-      // alert("Document deleted succesfully!");
-      fetchCartData();
-    }).catch((error) => {
+  axios.get("http://localhost:3000/cart/get-by-user-id?userId=" + userId)
+  .then(function(doc)
+  {
+    axios
+    .post(HOST_URL + "cart/create-or-update", 
+    {
+      userId: userId,
+      items: items,
+      cartId: doc.data._id || null,
+    })
+    .then((res) => {
+      console.log("Item quantity changed");
+    })
+    .catch((error) => {
       var errorCode = error.code;
       var errorMessage = error.message;
       // ..
-      // alert("Error: " + errorMessage);
+      //window.alert("Error: " + errorMessage);
     });
+  })
 }
+
+// cartSave(items, userId)
+// {
+//   firebaseApp.firestore().collection("cart").doc(userId).set({
+//     items: items,
+//     userId:userId
+//   }).then(() => {
+//       // alert("Document deleted succesfully!");
+//       fetchCartData();
+//     }).catch((error) => {
+//       var errorCode = error.code;
+//       var errorMessage = error.message;
+//       // ..
+//       // alert("Error: " + errorMessage);
+//     });
+// }
 
 render() {
       return (
@@ -229,14 +305,15 @@ render() {
                   <View style={styles.btns}>
 
 
-                  <TouchableOpacity style={styles.increBtn} onPress={() => this.IncrementItem(item.id)}>
-                    <Text  style={styles.textBtn}>+</Text>
+                  <TouchableOpacity style={styles.increBtn} onPress={() => this.DecreaseItem(item.id)}>
+                    <Text  style={styles.textBtn}>-</Text>
                   </TouchableOpacity>
                     {/* <Button title = "+" onPress={() => this.IncrementItem(item.id)}/> */}
-                    <TextInput style={styles.input} placeholder= "Qty" value={item.quantity} />
+                    {/* <TextInput style={styles.input} placeholder= "Qty" value={item.quantity} /> */}
+                    <TextInput style={styles.input} placeholder= "Qty">{item.quantity}</TextInput>
 
-                  <TouchableOpacity style={styles.decreBtn} onPress={() => this.DecreaseItem(item.id)}>
-                    <Text  style={styles.textBtn}>-</Text>
+                  <TouchableOpacity style={styles.decreBtn} onPress={() => this.IncrementItem(item.id)}>
+                    <Text  style={styles.textBtn}>+</Text>
                   </TouchableOpacity>
                     {/* <Button title = "-" onPress={() => this.DecreaseItem(item.id)}/> */}
                   </View>

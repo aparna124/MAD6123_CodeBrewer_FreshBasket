@@ -61,7 +61,7 @@ class Checkout extends React.Component {
     var totalPrice = 0;
     this.state.products.forEach(function (element) {
       totalPrice = totalPrice + element.quantity*element.price;
-      console.log(totalPrice);
+      //console.log(totalPrice);
     });
     this.setState({total: totalPrice});
     
@@ -160,6 +160,7 @@ class Checkout extends React.Component {
     })
       .then(() => {
         alert("Your order has been succesfully placed");
+        self.deleteCart(userid);
       }).catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -168,41 +169,43 @@ class Checkout extends React.Component {
       });
   }
 
-  // addToOrder(orders, userid) 
-  // {
-  //   var self = this;
-  //   var docData = {
-  //     orderId: Date.now().toString(),
-  //     userId: userid,
-  //     status: "Ordered",
-  //     products: orders,
-  //     totalPrice: this.state.total
-  //   }
-  //   firebaseApp.firestore().collection("order").doc().set(docData)
-  //     .then(() => {
-  //       alert("Your order has been succesfully placed");
-  //       self.deleteCart(userid);
-  //       // self.props.navigation.navigate('Home');
-  //     }).catch((error) => {
-  //       var errorCode = error.code;
-  //       var errorMessage = error.message;
-  //       // ..
-  //      alert("Error: " + errorMessage);
-  //     });
-  // }
-
-deleteCart(userid) 
-{
-  var self = this;
-  var deleData = firebaseApp.firestore().collection('cart').where('userId', '==', userid);
-  deleData.get().then(function (querySnapshot) {
-    querySnapshot.forEach(function (doc) {
-      doc.ref.delete();
-    });
-    self.props.navigation.navigate('Home');
-  });
   
+
+
+deleteCart(userId) 
+{
+
+  var self = this;
+  axios.get(HOST_URL + "cart/get-by-user-id?userId=" + userId)
+  .then(function (doc) {
+    let cartId = doc.data._id;
+    console.log(cartId);
+  axios.get(HOST_URL + "cart/clearCart?cartId=" + cartId)
+  .then(function (doc){
+    console.log("cart deleted");
+  }).catch((error) => {
+  //   var errorCode = error.code;
+  //   var errorMessage = error.message;
+  //  alert("Error: " + errorMessage);
+  console.log("Delete cart catch");
+  });
+  })
 }
+
+
+
+// deleteCart(userid) 
+// {
+//   var self = this;
+//   var deleData = firebaseApp.firestore().collection('cart').where('userId', '==', userid);
+//   deleData.get().then(function (querySnapshot) {
+//     querySnapshot.forEach(function (doc) {
+//       doc.ref.delete();
+//     });
+//     self.props.navigation.navigate('Home');
+//   });
+  
+// }
 
   render() {
 
