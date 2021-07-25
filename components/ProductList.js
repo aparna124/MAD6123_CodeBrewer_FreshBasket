@@ -20,18 +20,62 @@ import { HOST_URL } from "../commonConfig";
 class ProductList extends React.Component {
   state = { products: "" };
 
+  // initCategory() {
+  //   console.log("initProducts");
+
+  //   const catId = this.props.navigation.getParam("categoryId");
+  //   const searchText = this.props.navigation.getParam("searchText");
+  //   let url = HOST_URL + "product";
+  //   if (catId != null && catId != undefined && catId != "") {
+  //     url = url + "?categoryId=" + catId;
+  //   }
+  //   axios.get(url).then((res) => {
+  //     this.setState({ products: res.data });
+  //   });
+  // }
+
   initCategory() {
     console.log("initProducts");
 
     const catId = this.props.navigation.getParam("categoryId");
     const searchText = this.props.navigation.getParam("searchText");
+    let displayProducts;
+  
     let url = HOST_URL + "product";
     if (catId != null && catId != undefined && catId != "") {
       url = url + "?categoryId=" + catId;
+
+       axios.get(url).then((res) => {
+          this.setState({ products: res.data });
+       });
+
     }
-    axios.get(url).then((res) => {
-      this.setState({ products: res.data });
-    });
+    else if(searchText != null && searchText != undefined)// && searchText.toLowerCase().includes(pName) || details.includes(searchText.toLowerCase()))
+    {
+
+      let searchlist = [];
+      let pName;
+      //let pDetails;
+      axios.get(url).then((res) => {
+        res.data.forEach(element => {
+          pName = element.name.toLowerCase();
+          let url1 = url;
+          if ((searchText.toLowerCase().includes(pName)) || (pName.includes(searchText.toLowerCase())))
+          {
+            url = HOST_URL + "product/search?searchText=" +element.name; 
+            console.log(url);
+            axios.get(url).then((res) => {
+              searchlist.push(res.data[0]);
+             
+            });
+          }
+        });
+       
+       
+      });
+      this.setState({ products: searchlist });
+    }
+    
   }
 
   componentDidMount() {

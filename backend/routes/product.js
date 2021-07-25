@@ -5,15 +5,26 @@ let Category = require('../models/category');
 
 router.route('/').get((req,res) => {
     const categoryId = req.query.categoryId
+    const searchText = req.query.searchText;
     if(categoryId == undefined || categoryId == null){
         Product.find()
             .then(product => res.json(product))
             .catch(err => res.status(400).json('Error:' + err));
-    }else {
+    }
+    else {
         Product.find({category: categoryId})
             .then(product => res.json(product))
             .catch(err => res.status(400).json('Error:' + err));
     }
+});
+
+router.route('/search').get((req,res) => {
+    const searchText = req.query.searchText;
+    console.log(searchText);
+        Product.find({name: searchText})
+            .then(product => res.json(product))
+            .catch(err => res.status(400).json('Error:' + err));
+    
 });
 
 router.route('/:id').get((req,res) => {
