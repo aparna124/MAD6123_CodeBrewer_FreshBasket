@@ -83,14 +83,14 @@ class Checkout extends React.Component {
       let itemIdList;
       let items;
       axios
-      .get("http://localhost:3000/cart/get-by-user-id?userId=" + userId).then(function(doc){
+      .get("http://192.168.0.112:3000/cart/get-by-user-id?userId=" + userId).then(function(doc){
         items = doc.data.items;
         itemIdList = Object.keys(items);
         count = itemIdList.length;
         //console.log(itemIdList);
         if(itemIdList.length > 0){
 
-          axios.get("http://localhost:3000/product").then((res) => {
+          axios.get("http://192.168.0.112:3000/product").then((res) => {
             //console.log(res.data);
             res.data.forEach(element => {
               //console.log(element._id);
@@ -150,7 +150,7 @@ class Checkout extends React.Component {
   addToOrder(orders, userid) 
   {
     var self = this;
-    axios.post("http://localhost:3000/order/add", {
+    axios.post("http://192.168.0.112:3000/order/add", {
       orderId: Date.now().toString(),
       userId: userid,
       status: "Ordered",

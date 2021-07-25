@@ -14,9 +14,7 @@ const ProfileRoute = () => (
 
  
 export default function MyAccount(props) {
-
-
-
+  
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([

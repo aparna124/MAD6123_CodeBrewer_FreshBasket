@@ -2,25 +2,22 @@
 import React, { Component } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, TextInput, Button } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import {firebaseApp} from '../firebase-config';
+import { firebaseApp } from '../firebase-config';
 import { StackActions, NavigationActions } from 'react-navigation';
 import axios from "axios";
 
 class Profile extends Component {
 
- constructor(props)
- {
-   super(props);
-   this.state = {firstname: '', lastname: '', email: '', contact: '', address: '', user: null};
-  //  this.fetchData = this.fetchData();
- }
-    
-  fetchData()
-  {
+  constructor(props) {
+    super(props);
+    this.state = { firstname: '', lastname: '', email: '', contact: '', address: '' };
+    //  this.fetchData = this.fetchData();
+  }
+
+  fetchData() {
     let self = this;
     const currentUser = firebaseApp.auth().currentUser;
-    const uid = currentUser.uid;
-    if( currentUser == null || currentUser == undefined){
+    if (currentUser == null || currentUser == undefined) {
       alert("you have to login")
       const navigateAction = StackActions.reset({
         index: 0,
@@ -30,49 +27,44 @@ class Profile extends Component {
       self.props.navigation.dispatch(navigateAction);
       return
     }
-    
-    //db.collection("user").doc(currentUser.uid).get() 
-    
-     axios.get("http://localhost:3000/profile?userid=" +uid)
-    .then(res =>
-    {
-      
-          self.setState({firstname: res.data[0].firstname});
-          self.setState({lastname: res.data[0].lastname});
-          self.setState({email: res.data[0].email});
-          self.setState({contact: res.data[0].contact});
-          self.setState({address: res.data[0].address});
-    }).catch(function(error){
-      console.log("error", error);
-    })
-  }
-  
+    const uid = currentUser.uid;
+    axios.get("http://192.168.0.112:3000/profile?userid=" + uid)
+      .then(res => {
 
-  componentDidMount(){
-    // console.log('parent',this.props.navigation)
+        self.setState({ firstname: res.data[0].firstname });
+        self.setState({ lastname: res.data[0].lastname });
+        self.setState({ email: res.data[0].email });
+        self.setState({ contact: res.data[0].contact });
+        self.setState({ address: res.data[0].address });
+      }).catch(function (error) {
+        console.log("error", error);
+      })
+  }
+
+
+  componentDidMount() {
+    console.log("Profile componentDidMount")
     this.fetchData();
   }
 
-  signOutUser = async () => 
-  {
+  signOutUser = async () => {
     var self = this;
     try {
-        await firebaseApp.auth().signOut();
+      await firebaseApp.auth().signOut();
 
-        const navigateAction = StackActions.reset({
-          index: 0,
-          key: null,
-          actions: [NavigationActions.navigate({ routeName: 'SignIn' })],
-        });
-        self.props.navigation.dispatch(navigateAction);
+      const navigateAction = StackActions.reset({
+        index: 0,
+        key: null,
+        actions: [NavigationActions.navigate({ routeName: 'SignIn' })],
+      });
+      self.props.navigation.dispatch(navigateAction);
 
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
-}
+  }
 
-  updateUser()
-  { 
+  updateUser() {
 
     const uid = firebaseApp.auth().currentUser.uid;
     console.log(uid);
@@ -94,7 +86,7 @@ class Profile extends Component {
       address: this.state.address,
     }
 
-      axios.put("http://localhost:3000/profile?userid=" +uid, user)
+    axios.put("http://192.168.0.112:3000/profile?userid=" + uid, user)
       .then(res => {
         console.log(res.data)
         this.setState({
@@ -107,9 +99,9 @@ class Profile extends Component {
       });
   }
 
-    render() {
-      return (
-        <View style={styles.container}>
+  render() {
+    return (
+      <View style={styles.container}>
         <View style={styles.header}>
           {/* <Image source={require('./assets/logo.png')}/> */}
           <Text style={styles.titleText}>
@@ -117,52 +109,39 @@ class Profile extends Component {
           </Text>
 
         </View>
-        
+
         {/* <AntDesign name="edit" size={24} color="grey" style = {styles.inputIcon}/> */}
         {/* <FontAwesome name="save" size={28} color="#75C34D" style = {styles.inputIcon} /> */}
-         
-       
+
+
         <ScrollView>
-    
-            
-            {/* First name */}
-            <Text style={[styles.text_footer, {margin: 12}, {fontSize: 15}]}>First Name</Text>
-             <View> 
-                <TextInput style={styles.resultText} onChangeText={firstname => this.setState({firstname})}>{this.state.firstname}</TextInput>
-            </View> 
-            
 
 
-             {/* Last name */}
-             <Text style={[styles.text_footer, {margin: 12}, {fontSize: 15}]}>Last Name</Text>
-             <View>
-                <TextInput style={styles.resultText} onChangeText={lastname => this.setState({lastname})}>{this.state.lastname}</TextInput>
-            </View>
+          {/* First name */}
+          <Text style={[styles.text_footer, { margin: 12 }, { fontSize: 15 }]}>First Name</Text>
+          <TextInput style={styles.resultText} onChangeText={firstname => this.setState({ firstname })} value={this.state.firstname} />
 
-            {/* Email */}
-           <Text style={[styles.text_footer, {margin: 12}, {fontSize: 15}]}>Email</Text>
-            <View>
-                <TextInput style={styles.resultText} onChangeText={email => this.setState({email})}>{this.state.email}</TextInput>
-            </View>
+          {/* Last name */}
+          <Text style={[styles.text_footer, { margin: 12 }, { fontSize: 15 }]}>Last Name</Text>
+          <TextInput style={styles.resultText} onChangeText={lastname => this.setState({ lastname })} value={this.state.lastname} />
 
-            {/* Contact */}
-            <Text style={[styles.text_footer, {margin: 12}, {fontSize: 15}]}>Contact</Text>
-            <View>
-                <TextInput style={styles.resultText} onChangeText={contact => this.setState({contact})}>{this.state.contact}</TextInput>
-            </View>
+          {/* Email */}
+          <Text style={[styles.text_footer, { margin: 12 }, { fontSize: 15 }]}>Email</Text>
+          <TextInput style={styles.resultText} onChangeText={email => this.setState({ email })} value={this.state.email}/>
 
-            {/* Address */}
-            <Text style={[styles.text_footer, {margin: 12}, {fontSize: 20}]}>Address</Text>
-            <View>
-                <TextInput style={styles.TextInputAddress} onChangeText={address => this.setState({address})}>{this.state.address}</TextInput>
-            </View>
-            {/* <Button title="Save" style = {styles.inputIcon} onPress={() => this.updateUser()}/> */}
+          {/* Contact */}
+          <Text style={[styles.text_footer, { margin: 12 }, { fontSize: 15 }]}>Contact</Text>
+          <TextInput style={styles.resultText} onChangeText={contact => this.setState({ contact })} value={this.state.contact ?? ""}/>
 
-            <TouchableOpacity style={styles.button} onPress={() => this.updateUser()}>
-                <Text  style={styles.textBtn}>Save</Text>
-            </TouchableOpacity>
+          {/* Address */}
+          <Text style={[styles.text_footer, { margin: 12 }, { fontSize: 20 }]}>Address</Text>
+          <TextInput style={styles.TextInputAddress} onChangeText={address => this.setState({ address })} value={this.state.address ?? ""}/>
 
-            {/* <View style={styles.profileFooter}/>
+          <TouchableOpacity style={styles.button} onPress={() => this.updateUser()}>
+            <Text style={styles.textBtn}>Save</Text>
+          </TouchableOpacity>
+
+          {/* <View style={styles.profileFooter}/>
 
             <Text style={styles.profileFooterText}>Order Status</Text>
 
@@ -170,33 +149,35 @@ class Profile extends Component {
 
             <Text style={styles.profileFooterText}>Wallet</Text> */}
 
-            <View style={styles.profileFooter}/>
+          <View style={styles.profileFooter} />
 
-            <View style={styles.profileFooterBtn}>
-              <Button title="Logout" onPress={() => this.signOutUser()} />
-            </View>
-          
+          <View style={styles.profileFooterBtn}>
+          <TouchableOpacity style={styles.button} onPress={() => this.signOutUser()}>
+            <Text>Logout</Text>
+          </TouchableOpacity>
+          </View>
 
-            <View style={styles.profileFooter}/>
+
+          <View style={styles.profileFooter} />
 
         </ScrollView>
-       
+
       </View>
-      );
-    }
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
-   flex: 1,
-   backgroundColor: '#fff',
+    flex: 1,
+    backgroundColor: '#fff',
   },
 
   header: {
-   justifyContent: 'flex-end',
-   paddingHorizontal: 20,
-   paddingBottom: 50,
-  },  
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingBottom: 50,
+  },
 
   titleText:
   {
@@ -208,8 +189,8 @@ const styles = StyleSheet.create({
 
   action:
   {
-      flexDirection: 'row',
-      marginTop: 20,
+    flexDirection: 'row',
+    marginTop: 20,
   },
 
   resultText:
@@ -219,7 +200,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.25,
     borderRadius: 5,
     padding: 10,
-  }, 
+  },
 
   TextInputAddress:
   {
@@ -227,7 +208,7 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 0.25,
     borderRadius: 5,
-    padding: 10,  
+    padding: 10,
   },
   inputIcon:
   {
@@ -235,13 +216,13 @@ const styles = StyleSheet.create({
   },
   profileFooter:
   {
-    borderBottomColor: 'grey', 
-    borderBottomWidth: 0.2, 
+    borderBottomColor: 'grey',
+    borderBottomWidth: 0.2,
     paddingBottom: '5%'
   },
   profileFooterText:
   {
-    paddingTop: '5%', 
+    paddingTop: '5%',
     paddingLeft: '5%',
     color: 'red',
     fontSize: 20,
@@ -253,7 +234,7 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 20,
   },
-  
+
   button: {
     margin: 12,
     height: 40,

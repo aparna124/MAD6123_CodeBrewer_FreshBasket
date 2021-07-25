@@ -49,7 +49,7 @@ fetchCartData()
       let count;
       //db.collection("cart").doc(userId).get().then(function(doc)
       axios
-      .get("http://localhost:3000/cart/get-by-user-id?userId=" + userId).then(function(doc){
+      .get("http://192.168.0.112:3000/cart/get-by-user-id?userId=" + userId).then(function(doc){
         let items;
         items = doc.data.items;
         itemIdList = Object.keys(items);
@@ -62,7 +62,7 @@ fetchCartData()
         {
 
 
-          axios.get("http://localhost:3000/product").then((res) => {
+          axios.get("http://192.168.0.112:3000/product").then((res) => {
             //console.log(res.data);
             res.data.forEach(element => {
               //console.log(element._id);

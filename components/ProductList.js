@@ -44,7 +44,7 @@ class ProductList extends React.Component {
     const userId = firebaseApp.auth().currentUser.uid;
     if (userId) {
       axios
-        .get("http://localhost:3000/cart/get-by-user-id?userId=" + userId)
+        .get("http://192.168.0.112:3000/cart/get-by-user-id?userId=" + userId)
         .then(function (doc) {
           let items;
           //console.log(Object.keys(doc.data));
@@ -73,7 +73,7 @@ class ProductList extends React.Component {
           }
 
           axios
-            .post("http://localhost:3000/cart/create-or-update", 
+            .post("http://192.168.0.112:3000/cart/create-or-update", 
             {
               userId: userId,
               items: items,

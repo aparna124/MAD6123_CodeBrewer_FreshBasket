@@ -13,11 +13,13 @@ import Checkout from './components/Checkout';
 import MyAccount from './components/MyAccount'
 import adminCategoryList from './components/admin/CategoryList';
 import adminProductList from './components/admin/ProductList';
+import adminOrderList from './components/admin/OrderList';
 import adminCategory from './components/admin/Category';
 import adminProduct from './components/admin/Product';
 
 const Navigator = createStackNavigator({
   
+  // adminOrderList: { screen: adminOrderList },
   // MyAccount: {screen: MyAccount},
   // ProductList: { screen: ProductList },
   // ProductDetail: { screen: ProductDetail },
@@ -28,6 +30,7 @@ const Navigator = createStackNavigator({
   Checkout: {screen: Checkout},
   adminCategoryList: { screen: adminCategoryList },
   adminProductList: { screen: adminProductList },
+  adminOrderList: { screen: adminOrderList },
   adminCategory: { screen: adminCategory },
   adminProduct: { screen: adminProduct },
 },

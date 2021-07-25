@@ -53,7 +53,7 @@ class SignUp extends React.Component   {
         //   email: this.state.email,
         //   type: "user"
         //   })
-          axios.post("http://localhost:3000/user/register",{
+          axios.post("http://192.168.0.112:3000/user/register",{
             firstname: this.state.firstname,
             lastname: this.state.lastname,
             email: this.state.email,

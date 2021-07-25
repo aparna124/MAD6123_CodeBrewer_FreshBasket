@@ -24,7 +24,7 @@ class SignIn extends React.Component {
     
     firebaseApp.auth().signInWithEmailAndPassword(email, password).then(() =>
     {
-      axios.post("http://localhost:3000/user/login",{
+      axios.post("http://192.168.0.112:3000/user/login",{
         email: this.state.email,
         password: this.state.password,
       }).then((res) => {
