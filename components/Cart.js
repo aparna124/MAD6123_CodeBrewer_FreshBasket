@@ -7,6 +7,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from "axios";
+import { HOST_URL } from '../commonConfig'
 
 import {firebaseApp} from '../firebase-config';
 
@@ -49,7 +50,7 @@ fetchCartData()
       let count;
       //db.collection("cart").doc(userId).get().then(function(doc)
       axios
-      .get("http://192.168.0.112:3000/cart/get-by-user-id?userId=" + userId).then(function(doc){
+      .get(HOST_URL + "cart/get-by-user-id?userId=" + userId).then(function(doc){
         let items;
         items = doc.data.items;
         itemIdList = Object.keys(items);
@@ -62,7 +63,7 @@ fetchCartData()
         {
 
 
-          axios.get("http://192.168.0.112:3000/product").then((res) => {
+          axios.get(HOST_URL + "product").then((res) => {
             //console.log(res.data);
             res.data.forEach(element => {
               //console.log(element._id);
@@ -232,7 +233,7 @@ render() {
                     <Text  style={styles.textBtn}>+</Text>
                   </TouchableOpacity>
                     {/* <Button title = "+" onPress={() => this.IncrementItem(item.id)}/> */}
-                    <TextInput style={styles.input} placeholder= "Qty">{item.quantity}</TextInput>
+                    <TextInput style={styles.input} placeholder= "Qty" value={item.quantity} />
 
                   <TouchableOpacity style={styles.decreBtn} onPress={() => this.DecreaseItem(item.id)}>
                     <Text  style={styles.textBtn}>-</Text>

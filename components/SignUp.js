@@ -7,6 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { StackActions, NavigationActions } from 'react-navigation'; 
 import {firebaseApp} from '../firebase-config';
 import axios from "axios";
+import { HOST_URL } from '../commonConfig'
 
 class SignUp extends React.Component   {
 
@@ -53,7 +54,7 @@ class SignUp extends React.Component   {
         //   email: this.state.email,
         //   type: "user"
         //   })
-          axios.post("http://192.168.0.112:3000/user/register",{
+          axios.post(HOST_URL + "user/register",{
             firstname: this.state.firstname,
             lastname: this.state.lastname,
             email: this.state.email,

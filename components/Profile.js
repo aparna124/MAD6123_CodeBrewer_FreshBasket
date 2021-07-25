@@ -5,6 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { firebaseApp } from '../firebase-config';
 import { StackActions, NavigationActions } from 'react-navigation';
 import axios from "axios";
+import { HOST_URL } from '../commonConfig'
 
 class Profile extends Component {
 
@@ -28,7 +29,7 @@ class Profile extends Component {
       return
     }
     const uid = currentUser.uid;
-    axios.get("http://192.168.0.112:3000/profile?userid=" + uid)
+    axios.get(HOST_URL + "profile?userid=" + uid)
       .then(res => {
 
         self.setState({ firstname: res.data[0].firstname });
@@ -86,7 +87,7 @@ class Profile extends Component {
       address: this.state.address,
     }
 
-    axios.put("http://192.168.0.112:3000/profile?userid=" + uid, user)
+    axios.put(HOST_URL + "profile?userid=" + uid, user)
       .then(res => {
         console.log(res.data)
         this.setState({
