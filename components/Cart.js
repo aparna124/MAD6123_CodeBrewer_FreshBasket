@@ -123,8 +123,6 @@ deleteItem(productId) {
 }
 
 
-
-
 IncrementItem = (productId) => {
   console.log("Incrementing");
   const userId = firebaseApp.auth().currentUser.uid;
@@ -242,7 +240,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: '#FFF',
     padding: '2%',
-    //flexDirection: 'column',
   },
 
   content:
@@ -261,7 +258,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingRight: '10%',
     borderColor: '#F4EDED',
-    //backgroundColor: '#F4EDED',
     borderWidth: 3,
     borderRadius: 5,
     alignItems: 'center',
