@@ -7,6 +7,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { createStackNavigator } from "react-navigation-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
+import axios from 'axios';
+import { HOST_URL } from '../commonConfig'
 
 import { firebaseApp } from '../firebase-config';
 
@@ -35,17 +37,18 @@ class Home extends React.Component {
 
     var self = this;
     var topsellers = [];
-    //console.log("Top seller");
-    firebaseApp.firestore().collection("order").get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        var len = Object.keys(doc.data().products).length;
-        //console.log(len);
+  
+      axios.get(HOST_URL + 'order').then((querySnapshot) => {
+      querySnapshot.data.forEach((doc) => {
+        //console.log(querySnapshot.data);
+        var len = Object.keys(doc.products).length;
+    
         for (var i = 0; i < len; i++) {
-          //console.log(doc.data().products[i].quantity);
-          var orderQty = doc.data().products[i].quantity;
+          
+          var orderQty = doc.products[i].quantity;
           if (orderQty >= 2) {
-            //displayTopSellerItems();
-            var pName = doc.data().products[i].productname;
+         
+            var pName = doc.products[i].productname;
             if (topsellers.includes(pName)) {
               //console.log("Item already displayed");
             }
@@ -57,6 +60,8 @@ class Home extends React.Component {
           }
         }
         self.displayTopSellerItems(topsellers)
+
+        
       });
     });
   }
@@ -70,27 +75,23 @@ class Home extends React.Component {
 
     topsellers.forEach(pName => {
 
-      firebaseApp.firestore().collection("products").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
+      //console.log(pName);
+      axios.get(HOST_URL + 'product').then((querySnapshot) => {
 
-          if (doc.data().name == pName) {
-            dataPromisies.push(
-              storage.ref(doc.data().image).getDownloadURL().then((url) => {
-                products = [...products, { id: doc.id, imagePath: url, ...doc.data() }];
-              }).catch(() => {
-                products = [...products, { id: doc.id, ...doc.data() }];
-              })
-            );
+        querySnapshot.data.forEach((doc) => {
+          
+          if (doc.name == pName) {
+          
+              products = [ ...products, { id: doc._id, imagePath: "", ...doc}];
           }
 
         });
-        Promise.all(dataPromisies).then(() => {
-          self.setState({ products: products })
-          //console.log(this.state.products.length)
-        })
+        self.setState({ products: products});
       }).catch((error) => console.log('error', error));
 
     });
+    console.log(products);
+    // this.setState({products: products});
 
   }
 
@@ -191,7 +192,7 @@ class Home extends React.Component {
                     />
                   </View>
                   <Text style={styles.itemText}>{item.name}</Text>
-                  <Text style={styles.itemPrice}>$ {item.price[Object.keys(item.price)[0]]}</Text>
+                  <Text style={styles.itemPrice}>$ {item.price}</Text>
                   {/* <Ionicons style={styles.rightIcon} name="add-outline" size={24} color="black" /> */}
                   <TouchableOpacity style={styles.button} onPress={() => this.addTocart(item.id)}>
                     <Text style={styles.textBtn}>Add</Text>

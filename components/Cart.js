@@ -54,7 +54,7 @@ fetchCartData()
         if(itemIdList.length > 0)
         {
 
-          axios.get(HOST_URL + "product").then((res) => {
+          axios.get(HOST_URL + "/product").then((res) => {
             res.data.forEach(element => {
               if(itemIdList.indexOf(element._id) !== -1)
               {
