@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { SafeAreaView, ScrollView, StyleSheet, Text, Button, TouchableOpacity, View, Image, TextInput } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, Button, TouchableOpacity, View, Image, TextInput, Platform } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {HOST_URL} from '../../commonConfig'
+import * as ImagePicker from 'expo-image-picker';
+import {uploadImageAsync} from '../../firebase-config';
 
 export default class Product extends Component {
   constructor(props) {
@@ -19,7 +21,7 @@ export default class Product extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const productId = this.props.navigation.getParam('productId')
     axios.get(HOST_URL + 'category')
       .then(catRes => {
@@ -45,6 +47,14 @@ export default class Product extends Component {
           this.setState({categories: catRes.data})
         }
       });
+    if (Platform.OS !== "web") {
+      const {
+        status,
+      } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+      }
+    }
   }
   
   updateInputVal = (val, prop) => {
@@ -53,14 +63,21 @@ export default class Product extends Component {
     this.setState(state);
   }
 
-  onSubmit = () => {
-    const product = {
+  onSubmit = async () => {
+    var product = {
       productName: this.state.productName,
       categoryId: this.state.categoryId,
       productWeight: this.state.productWeight,
       productPrice: this.state.productPrice,
       productDescription: this.state.productDescription,
       productIngredients: this.state.productIngredients
+    }
+    if(this.pickerResult != null && this.pickerResult != undefined){
+      console.log("pickerResult")
+      product = {
+        ...product,
+        image: await this._handleImagePicked(this.pickerResult, product.productName),
+      }
     }
     if(this.state.productId != null && this.state.productId != undefined && this.state.productId != ''){
       axios.put(HOST_URL + 'product/' + this.state.productId, product)
@@ -113,6 +130,13 @@ export default class Product extends Component {
                 }
             </Picker>
 
+            <View style={styles.TextInput}>
+              <Button
+                onPress={this._pickImage}
+                title="Pick an image"
+              />
+            </View>
+
             <TextInput style={styles.TextInput} placeholder="Type product weight" keyboardType='numeric' value={this.state.productWeight} onChangeText={(val) => this.updateInputVal(val, 'productWeight')}/>
             <TextInput style={styles.TextInput} placeholder="Type product price" keyboardType='numeric' value={this.state.productPrice} onChangeText={(val) => this.updateInputVal(val, 'productPrice')}/>
             <TextInput style={styles.TextInput} placeholder="Type product description" value={this.state.productDescription} onChangeText={(val) => this.updateInputVal(val, 'productDescription')}/>
@@ -129,6 +153,26 @@ export default class Product extends Component {
       </SafeAreaView>
     )
   }
+  
+  pickerResult = null;
+  _pickImage = async () => {
+    this.pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+  };
+
+  _handleImagePicked = async (pickerResult, name) => {
+    try {
+      console.log("_handleImagePicked")
+      const uploadUrl = await uploadImageAsync(pickerResult.uri, name);
+      return uploadUrl;
+    } catch (e) {
+      console.log(e);
+      alert("Upload failed, sorry :(");
+      return null 
+    }
+  };
 }
 
 const styles = StyleSheet.create({

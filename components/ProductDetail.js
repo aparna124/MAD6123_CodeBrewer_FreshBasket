@@ -85,14 +85,14 @@ class ProductDetail extends React.Component {
       <View style={styles.container}>
         <SafeAreaView>
           <ScrollView>
-            {/* <View style={styles.imageView}>
+            <View style={styles.imageView}>
               <Image
                 style={styles.image}
                 source={{
-                  uri: this.state.product.imagePath,
+                  uri: this.state.product.image,
                 }}
               /> 
-            </View> */}
+            </View>
             <Text style={styles.itemText}>{this.state.product.name}</Text>
             <View style={styles.itemtitle}>
               <Text style={styles.itemPrice}>$ {this.state.product.price}</Text>

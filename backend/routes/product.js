@@ -38,13 +38,18 @@ router.route('/:id').put((req,res) => {
     const productId = req.params.id
     const name = req.body.productName;
     const category = req.body.categoryId;
-    const image = '';
+    const image = req.body.image;
     const weight = req.body.productWeight;
     const price = req.body.productPrice;
     const details = req.body.productDescription;
     const ingredients = req.body.productIngredients;
 
-    Product.findByIdAndUpdate(productId, {name, category, image, weight, price, details, ingredients})
+    var updateData = {name, category, weight, price, details, ingredients}
+    console.log(image)
+    if(image != null && image != undefined){
+        updateData = {...updateData, image}
+    }
+    Product.findByIdAndUpdate(productId, updateData)
         .then(() => res.json('Product Updated.'))
         .catch(err => res.status(400).json('Error:' + err));
 });
@@ -59,7 +64,7 @@ router.route('/:id').delete((req,res) => {
 router.route('/add').post((req,res) => {
     const name = req.body.productName;
     const category = req.body.categoryId;
-    const image = '';
+    const image = req.body.image;
     const weight = req.body.productWeight;
     const price = req.body.productPrice;
     const details = req.body.productDescription;

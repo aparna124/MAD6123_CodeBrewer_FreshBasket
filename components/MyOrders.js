@@ -58,7 +58,7 @@ class MyOrders extends React.Component {
                     <Image
                       style={{ width: 100, height: 100, marginBottom: 10, }}
                       source={{
-                        uri: item.imagePath,
+                        uri: item.image,
                       }}
                       resizeMode='center'
                     />

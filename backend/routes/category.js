@@ -10,7 +10,7 @@ router.route('/').get((req,res) => {
 
 router.route('/add').post((req,res) => {
     const name = req.body.categoryName;
-    const image = '';
+    const image = req.body.image;
     const count = 0
     
     const newCategory = new Category({name, image, count});
@@ -30,10 +30,16 @@ router.route('/:id').get((req,res) => {
 router.route('/:id').put((req,res) => {
     const categoryId = req.params.id
     const name = req.body.categoryName;
-    const image = ''
+    const image = req.body.image;
 
-
-    Category.findByIdAndUpdate(categoryId, {name, image})
+    var updateData = {}
+    if(name != null && name != undefined){
+        updateData = {...updateData, name}
+    }
+    if(image != null && image != undefined){
+        updateData = {...updateData, image}
+    }
+    Category.findByIdAndUpdate(categoryId, updateData)
         .then(() => res.json('Category Updated.'))
         .catch(err => res.status(400).json('Error:' + err));
 });

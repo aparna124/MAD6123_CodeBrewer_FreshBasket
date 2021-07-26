@@ -34,14 +34,14 @@ class Category extends React.Component {
           renderItem={({item}) => (
               <TouchableOpacity style={styles.item} onPress={() => 
               this.props.navigation.navigate('ProductList', {categoryId: item._id})}>
-                {/* <View style={styles.imageView}>
+                <View style={styles.imageView}>
                   <Image
                     style={styles.image}
                     source={{
-                      uri: item.imagePath,
+                      uri: item.image,
                     }}
                   />
-                </View> */}
+                </View>
                 <Text style={styles.itemText}>{item.name}</Text>
                 {/* <Text style={styles.productCount}>{item.count}</Text> */}
                 <AntDesign style={styles.rightIcon} name="caretright" size={24} color="black" />

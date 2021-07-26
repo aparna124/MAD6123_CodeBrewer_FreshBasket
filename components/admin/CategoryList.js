@@ -75,14 +75,14 @@ export default class Category extends Component {
           extraData={this.state}
           renderItem={({item}) => (
               <View style={styles.item}>
-                {/* <View style={styles.imageView}>
+                <View style={styles.imageView}>
                   <Image
                     style={styles.image}
                     source={{
-                      uri: item.imagePath,
+                      uri: item.image,
                     }}
                   />
-                </View> */}
+                </View>
                 <Text style={styles.itemText}>{item.name}</Text>
                 {/* <Text style={styles.productCount}>{item.count}</Text> */}
                 <TouchableOpacity style={styles.item} onPress={() => this.editCategory( item._id)}>

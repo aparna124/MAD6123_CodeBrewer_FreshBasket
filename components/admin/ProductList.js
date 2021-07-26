@@ -58,14 +58,14 @@ export default class Product extends Component {
             <TouchableOpacity style={styles.item} onPress={() => 
             this.props.navigation.navigate('ProductDetail', {productId: item._id})
             }>
-              {/* <View style={styles.imageView}>
+              <View style={styles.imageView}>
                 <Image
                   style={styles.image}
                   source={{
-                    uri: item.imagePath,
+                    uri: item.image,
                   }}
                 />
-              </View> */}
+              </View>
               <Text style={styles.itemText}>{item.name}</Text>
               <Text style={styles.itemPrice}>$ {item.price}</Text>
               <TouchableOpacity style={styles.button} onPress={() => this.editProduct( item._id)}>

@@ -40,17 +40,17 @@ class ProductList extends React.Component {
     const catId = this.props.navigation.getParam("categoryId");
     const searchText = this.props.navigation.getParam("searchText");
     let displayProducts;
-  
+
     let url = HOST_URL + "product";
     if (catId != null && catId != undefined && catId != "") {
       url = url + "?categoryId=" + catId;
 
-       axios.get(url).then((res) => {
-          this.setState({ products: res.data });
-       });
+      axios.get(url).then((res) => {
+        this.setState({ products: res.data });
+      });
 
     }
-    else if(searchText != null && searchText != undefined)// && searchText.toLowerCase().includes(pName) || details.includes(searchText.toLowerCase()))
+    else if (searchText != null && searchText != undefined)// && searchText.toLowerCase().includes(pName) || details.includes(searchText.toLowerCase()))
     {
 
       let searchlist = [];
@@ -59,23 +59,21 @@ class ProductList extends React.Component {
       axios.get(url).then((res) => {
         res.data.forEach(element => {
           pName = element.name.toLowerCase();
-          let url1 = url;
-          if ((searchText.toLowerCase().includes(pName)) || (pName.includes(searchText.toLowerCase())))
-          {
-            url = HOST_URL + "product/search?searchText=" +element.name; 
+          if ((searchText.toLowerCase().includes(pName)) || (pName.includes(searchText.toLowerCase()))) {
+            url = HOST_URL + "product/search?searchText=" + element.name;
             console.log(url);
             axios.get(url).then((res) => {
               searchlist.push(res.data[0]);
-             
+
             });
           }
         });
-       
-       
+
+
       });
       this.setState({ products: searchlist });
     }
-    
+
   }
 
   componentDidMount() {
@@ -93,19 +91,17 @@ class ProductList extends React.Component {
           let items;
           //console.log(Object.keys(doc.data));
           if (Object.keys(doc.data).length != 0) {
-        
+
             items = doc.data.items;
-            console.log("Product id is" +productId);
-        
-            if (Object.keys(items).indexOf(productId) === -1) 
-            {
-               //for (let [key, value] of Object.entries(items[0])) {console.log(`${key}: ${value}`);}
+            console.log("Product id is" + productId);
+
+            if (Object.keys(items).indexOf(productId) === -1) {
+              //for (let [key, value] of Object.entries(items[0])) {console.log(`${key}: ${value}`);}
               items[productId] = 1;
               console.log("Entered into");
               //console.log(items[productId]);
-            } 
-            else 
-            {
+            }
+            else {
               items[productId]++;
               console.log("Entered into else");
               console.log(items[productId]);
@@ -117,12 +113,12 @@ class ProductList extends React.Component {
           }
 
           axios
-            .post(HOST_URL + "cart/create-or-update", 
-            {
-              userId: userId,
-              items: items,
-              cartId: doc.data._id || null,
-            })
+            .post(HOST_URL + "cart/create-or-update",
+              {
+                userId: userId,
+                items: items,
+                cartId: doc.data._id || null,
+              })
             .then((res) => {
               alert("Item added to cart");
             })
@@ -172,14 +168,14 @@ class ProductList extends React.Component {
                     })
                   }
                 >
-                  {/* <View style={styles.imageView}>
-                <Image
-                  style={styles.image}
-                  source={{
-                    uri: item.imagePath,
-                  }}
-                />
-              </View> */}
+                  <View style={styles.imageView}>
+                    <Image
+                      style={styles.image}
+                      source={{
+                        uri: item.image,
+                      }}
+                    />
+                  </View>
                   <Text style={styles.itemText}>{item.name}</Text>
                   <Text style={styles.itemPrice}>$ {item.price}</Text>
                   <TouchableOpacity
