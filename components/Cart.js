@@ -93,7 +93,7 @@ deleteItem(productId) {
     if (user) {
 
     const userId = firebaseApp.auth().currentUser.uid;
-    axios.get("http://localhost:3000/cart/get-by-user-id?userId=" + userId).then(function(doc){
+    axios.get(HOST_URL + "cart/get-by-user-id?userId=" + userId).then(function(doc){
       let items;
       if(doc)
       {
@@ -101,7 +101,7 @@ deleteItem(productId) {
           delete(items[productId]);
           console.log(items)
           axios
-          .post("http://localhost:3000/cart/create-or-update", 
+          .post(HOST_URL + "cart/create-or-update", 
           {
             userId: userId,
             items: items,
@@ -158,7 +158,7 @@ getItemsFromProducts(products)
 
 cartSave(items, userId)
 {
-  axios.get("http://localhost:3000/cart/get-by-user-id?userId=" + userId)
+  axios.get(HOST_URL + "cart/get-by-user-id?userId=" + userId)
   .then(function(doc)
   {
     axios

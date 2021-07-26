@@ -55,13 +55,13 @@ class MyOrders extends React.Component {
                 <View style={{ borderColor: '#75C34D', borderWidth: 2, padding: 15, }}>
                   <Text style={{ fontWeight: 'bold', marginBottom: 10, }}>Order ID: {item.orderId}</Text>
                   <View style={{ display: 'flex', flexDirection: 'row' }}>
-                    <Image
+                    {/* <Image
                       style={{ width: 100, height: 100, marginBottom: 10, }}
                       source={{
                         uri: item.image,
                       }}
                       resizeMode='center'
-                    />
+                    /> */}
                     <View style={{ display: 'flex', flexDirection: 'column' }}>
                       <Text style={{ fontWeight: 'bold', marginBottom: 10, }}>{item.productname}</Text>
                       <Text style={{ marginBottom: 10, }}>Quantity: {quantity}</Text>
