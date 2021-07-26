@@ -46,14 +46,7 @@ class SignUp extends React.Component   {
       .then((res) => {
         console.log(firebaseApp.auth().currentUser.uid);
         const uid = firebaseApp.auth().currentUser.uid;
-        //const db = firebaseApp.firestore();
-
-        // db.collection('user').doc(uid).set({
-        //   firstname: this.state.firstname,
-        //   lastname: this.state.lastname,
-        //   email: this.state.email,
-        //   type: "user"
-        //   })
+       
           axios.post(HOST_URL + "user/register",{
             firstname: this.state.firstname,
             lastname: this.state.lastname,
@@ -77,7 +70,6 @@ class SignUp extends React.Component   {
     })
       .catch(error =>{
         console.log(error);
-        //this.setState({ errorMessage: error.message })
       })      
 }
 
@@ -91,7 +83,7 @@ class SignUp extends React.Component   {
       <View style={styles.container}>
         
           <View style={styles.header}>
-            {/* <Image source={require('./assets/logo.png')}/> */}
+      
             <Text style={styles.titleText}>
               Create an Account Here!
             </Text>

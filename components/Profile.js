@@ -12,7 +12,6 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = { firstname: '', lastname: '', email: '', contact: '', address: '' };
-    //  this.fetchData = this.fetchData();
   }
 
   fetchData() {
@@ -69,16 +68,7 @@ class Profile extends Component {
 
     const uid = firebaseApp.auth().currentUser.uid;
     console.log(uid);
-    // if( currentUser == null || currentUser == undefined){
-    //   alert("you have to login")
-    //   const navigateAction = StackActions.reset({
-    //     index: 0,
-    //     key: null,
-    //     actions: [NavigationActions.navigate({ routeName: 'SignIn' })],
-    //   });
-    //   this.props.navigation.dispatch(navigateAction);
-    //   return
-    // }
+
     const user = {
       firstname: this.state.firstname,
       lastname: this.state.lastname,
@@ -104,16 +94,12 @@ class Profile extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          {/* <Image source={require('./assets/logo.png')}/> */}
+    
           <Text style={styles.titleText}>
             Welcome {this.state.firstname}!
           </Text>
 
         </View>
-
-        {/* <AntDesign name="edit" size={24} color="grey" style = {styles.inputIcon}/> */}
-        {/* <FontAwesome name="save" size={28} color="#75C34D" style = {styles.inputIcon} /> */}
-
 
         <ScrollView>
 
@@ -141,14 +127,6 @@ class Profile extends Component {
           <TouchableOpacity style={styles.button} onPress={() => this.updateUser()}>
             <Text style={styles.textBtn}>Save</Text>
           </TouchableOpacity>
-
-          {/* <View style={styles.profileFooter}/>
-
-            <Text style={styles.profileFooterText}>Order Status</Text>
-
-            <View style={styles.profileFooter}/>
-
-            <Text style={styles.profileFooterText}>Wallet</Text> */}
 
           <View style={styles.profileFooter} />
 

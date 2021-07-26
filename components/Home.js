@@ -37,17 +37,17 @@ class Home extends React.Component {
 
     var self = this;
     var topsellers = [];
-  
-      axios.get(HOST_URL + 'order').then((querySnapshot) => {
+
+    axios.get(HOST_URL + 'order').then((querySnapshot) => {
       querySnapshot.data.forEach((doc) => {
         //console.log(querySnapshot.data);
         var len = Object.keys(doc.products).length;
-    
+
         for (var i = 0; i < len; i++) {
-          
+
           var orderQty = doc.products[i].quantity;
           if (orderQty >= 2) {
-         
+
             var pName = doc.products[i].productname;
             if (topsellers.includes(pName)) {
               //console.log("Item already displayed");
@@ -61,7 +61,7 @@ class Home extends React.Component {
         }
         self.displayTopSellerItems(topsellers)
 
-        
+
       });
     });
   }
@@ -74,72 +74,78 @@ class Home extends React.Component {
     var dataPromisies = [];
 
     topsellers.forEach(pName => {
-
-      //console.log(pName);
       axios.get(HOST_URL + 'product').then((querySnapshot) => {
 
         querySnapshot.data.forEach((doc) => {
-          
+
           if (doc.name == pName) {
-          
-              products = [ ...products, { id: doc._id, imagePath: "", ...doc}];
+
+            products = [...products, { id: doc._id, imagePath: "", ...doc }];
           }
 
         });
-        self.setState({ products: products});
+        self.setState({ products: products });
       }).catch((error) => console.log('error', error));
 
     });
     console.log(products);
-    // this.setState({products: products});
-
   }
 
 
-  addTocart(productId)
-  {
-    
+  addTocart(productId) {
+
     var self = this;
-    // firebaseApp.auth().onAuthStateChanged(function (user) {
-      const userId = firebaseApp.auth().currentUser.uid;
-      if (userId) {
-  
-        
-        firebaseApp.firestore().collection('cart').doc(userId).get().then(function(doc){
+
+    const userId = firebaseApp.auth().currentUser.uid;
+    if (userId) {
+      axios
+        .get(HOST_URL + "cart/get-by-user-id?userId=" + userId)
+        .then(function (doc) {
           let items;
-          if(doc.exists)
-          {
-            items = doc.data().items;
-            if(Object.keys(items).indexOf(productId) === -1 ){
+
+          if (Object.keys(doc.data).length != 0) {
+
+            items = doc.data.items;
+            console.log("Product id is" + productId);
+
+            if (Object.keys(items).indexOf(productId) === -1) {
+
               items[productId] = 1;
-            }else{
-              items[productId]++;
+              console.log("Entered into");
             }
-          }else{
+            else {
+              items[productId]++;
+              console.log("Entered into else");
+              console.log(items[productId]);
+            }
+          } else {
             // create new cart
-             items = {}
-             items[productId] = 1;
-          } 
-          firebaseApp.firestore().collection("cart").doc(userId).set({
-            items: items,
-            userId:userId
-          }).then(() => {
+            items = {};
+            items[productId] = 1;
+          }
+
+          axios
+            .post(HOST_URL + "cart/create-or-update",
+              {
+                userId: userId,
+                items: items,
+                cartId: doc.data._id || null,
+              })
+            .then((res) => {
               alert("Item added to cart");
-              //console.log("Document successfully written!");
-            }).catch((error) => {
+            })
+            .catch((error) => {
               var errorCode = error.code;
               var errorMessage = error.message;
               // ..
               //window.alert("Error: " + errorMessage);
             });
-        })
-    
-      }
-      else {
-        alert("You have to sign in to add products");
-        self.props.navigation.navigate('SignIn');
-      }
-    // });
+        });
+    } else {
+      alert("You have to sign in to add products");
+      self.props.navigation.navigate("SignIn");
+    }
+
   }
 
   render() {
@@ -147,17 +153,17 @@ class Home extends React.Component {
     const { search } = this.state;
 
     return (
-      <SafeAreaView style={{flex:1}}>
-        <View style={{ fbackgroundColor: "#75C34D", backgroundColor:"#75C34D", height:100 }}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ fbackgroundColor: "#75C34D", backgroundColor: "#75C34D", height: 100 }}>
           <Image
-              style={{ width: 40, height: 40, position: "absolute", left:10, top:50 }}
-              source={require('./logo.png')}
+            style={{ width: 40, height: 40, position: "absolute", left: 10, top: 50 }}
+            source={require('./logo.png')}
 
-            />
+          />
         </View>
-        <SearchBar 
-          inputStyle={{backgroundColor: 'white', padding: 5,}}
-          containerStyle={{backgroundColor: '#75C34D', borderWidth: 0,}}
+        <SearchBar
+          inputStyle={{ backgroundColor: 'white', padding: 5, }}
+          containerStyle={{ backgroundColor: '#75C34D', borderWidth: 0, }}
           placeholderTextColor={'#75C34D'}
           lightTheme
           placeholder="Search by category or products ..."
@@ -166,20 +172,20 @@ class Home extends React.Component {
           onSubmitEditing={(text) => this.searchProduct(text)} />
         <View style={styles.prucdtList}>
           <ScrollView
-          contentContainerStyle={{display: 'flex', alignItems:'stretch'}}>
+            contentContainerStyle={{ display: 'flex', alignItems: 'stretch' }}>
             <Image
               style={{
-                flexGrow:1,
-                height:400,
-                width:'100%',
+                flexGrow: 1,
+                height: 400,
+                width: '100%',
                 resizeMode: 'contain'
               }}
               source={require('./offer.png')}
             />
             <Text style={styles.headingFont}>Top Seller</Text>
-            <View style={{ marginBottom: 160,}}>
-              { this.state.products.map((item, index) => (
-            
+            <View style={{ marginBottom: 160, }}>
+              {this.state.products.map((item, index) => (
+
                 <TouchableOpacity style={styles.item} onPress={() =>
                   this.props.navigation.navigate('ProductDetail', { productId: item.id })
                 }>
@@ -198,11 +204,11 @@ class Home extends React.Component {
                     <Text style={styles.textBtn}>Add</Text>
                   </TouchableOpacity>
                 </TouchableOpacity>
-                ))
+              ))
               }
             </View>
           </ScrollView>
-        </View> 
+        </View>
       </SafeAreaView>
     );
   }

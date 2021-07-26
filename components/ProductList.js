@@ -20,26 +20,15 @@ import { HOST_URL } from "../commonConfig";
 class ProductList extends React.Component {
   state = { products: "" };
 
-  // initCategory() {
-  //   console.log("initProducts");
-
-  //   const catId = this.props.navigation.getParam("categoryId");
-  //   const searchText = this.props.navigation.getParam("searchText");
-  //   let url = HOST_URL + "product";
-  //   if (catId != null && catId != undefined && catId != "") {
-  //     url = url + "?categoryId=" + catId;
-  //   }
-  //   axios.get(url).then((res) => {
-  //     this.setState({ products: res.data });
-  //   });
-  // }
-
   initCategory() {
     console.log("initProducts");
 
     const catId = this.props.navigation.getParam("categoryId");
     const searchText = this.props.navigation.getParam("searchText");
     let displayProducts;
+
+    
+    let productNames = [];
 
     let url = HOST_URL + "product";
     if (catId != null && catId != undefined && catId != "") {
@@ -50,28 +39,32 @@ class ProductList extends React.Component {
       });
 
     }
-    else if (searchText != null && searchText != undefined)// && searchText.toLowerCase().includes(pName) || details.includes(searchText.toLowerCase()))
+    else if (searchText != null && searchText != undefined)
     {
-
+      var self = this;
+      console.log("search else if **************");
       let searchlist = [];
       let pName;
-      //let pDetails;
+      let searchtext = searchText.toLowerCase();
+     
       axios.get(url).then((res) => {
         res.data.forEach(element => {
           pName = element.name.toLowerCase();
-          if ((searchText.toLowerCase().includes(pName)) || (pName.includes(searchText.toLowerCase()))) {
+          if (((searchText.toLowerCase()).includes(pName)) || (pName.includes(searchText.toLowerCase()))) {
+            console.log(pName, searchText.toLowerCase());
             url = HOST_URL + "product/search?searchText=" + element.name;
             console.log(url);
             axios.get(url).then((res) => {
               searchlist.push(res.data[0]);
-
+            
             });
           }
         });
-
-
+      }).then(()=>
+      {
+        self.setState({ products: searchlist });
       });
-      this.setState({ products: searchlist });
+      
     }
 
   }
@@ -82,24 +75,23 @@ class ProductList extends React.Component {
 
   addTocart(productId) {
     var self = this;
-    // firebaseApp.auth().onAuthStateChanged(function (user) {
+    
     const userId = firebaseApp.auth().currentUser.uid;
     if (userId) {
       axios
         .get(HOST_URL + "cart/get-by-user-id?userId=" + userId)
         .then(function (doc) {
           let items;
-          //console.log(Object.keys(doc.data));
+
           if (Object.keys(doc.data).length != 0) {
 
             items = doc.data.items;
             console.log("Product id is" + productId);
 
             if (Object.keys(items).indexOf(productId) === -1) {
-              //for (let [key, value] of Object.entries(items[0])) {console.log(`${key}: ${value}`);}
+
               items[productId] = 1;
               console.log("Entered into");
-              //console.log(items[productId]);
             }
             else {
               items[productId]++;
@@ -128,25 +120,11 @@ class ProductList extends React.Component {
               // ..
               //window.alert("Error: " + errorMessage);
             });
-
-          // firebaseApp.firestore().collection("cart").doc(userId).set({
-          //   items: items,
-          //   userId:userId
-          // }).then(() => {
-          //     alert("Item added to cart");
-          //     console.log("Document successfully written!");
-          //   }).catch((error) => {
-          //     var errorCode = error.code;
-          //     var errorMessage = error.message;
-          //     // ..
-          //     //window.alert("Error: " + errorMessage);
-          //   });
         });
     } else {
       alert("You have to sign in to add products");
       self.props.navigation.navigate("SignIn");
     }
-    // });
   }
 
   render() {
@@ -187,6 +165,7 @@ class ProductList extends React.Component {
                 </TouchableOpacity>
               );
             }}
+            keyExtractor={(item, index) => index.toString()}
           />
         </SafeAreaView>
       </View>
@@ -200,20 +179,15 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     backgroundColor: "#FFF",
     padding: "2%",
-    // flexDirection: 'row',
   },
   item: {
     width: "46%",
     padding: 10,
     marginVertical: 8,
     borderColor: "#000",
-    // backgroundColor: '#e2ffd4',
     borderWidth: 1,
     borderRadius: 5,
     alignItems: "center",
-    // shadowColor: '#000',
-    // shadowRadius: 6,
-    // shadowOpacity: 1,
   },
   itemText: {
     textAlign: "center",

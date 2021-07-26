@@ -69,7 +69,7 @@ class SignIn extends React.Component {
       <View style={styles.container}>
         
           <View style={styles.header}>
-            {/* <Image source={require('./assets/logo.png')}/> */}
+      
             <Text style={styles.titleText}>
               Login Here!
             </Text>
@@ -117,10 +117,6 @@ class SignIn extends React.Component {
                       actions: [NavigationActions.navigate({ routeName: "Home" })],
                     });
                     this.props.navigation.dispatch(navigateAction);}}>Skip and Go to Home</Text>
-
-            {/* <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('adminCategoryList')}}>Go to admin</Text> */}
-            
-
         </View>
         
       </View>
