@@ -16,6 +16,8 @@ import adminProductList from './components/admin/ProductList';
 import adminOrderList from './components/admin/OrderList';
 import adminCategory from './components/admin/Category';
 import adminProduct from './components/admin/Product';
+import userInfoList from './components/admin/UserInfo';
+import userOrderDetail from './components/admin/userOrderDetail';
 
 const Navigator = createStackNavigator({
   
@@ -33,6 +35,8 @@ const Navigator = createStackNavigator({
   adminOrderList: { screen: adminOrderList },
   adminCategory: { screen: adminCategory },
   adminProduct: { screen: adminProduct },
+  userInfoList: { screen: userInfoList },
+  userOrderDetail: {screen: userOrderDetail}
 },
 
 {

@@ -96,6 +96,8 @@ export default class Category extends Component {
         </SafeAreaView>
         <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('adminProductList')}}>Go to Product List</Text>
         <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('adminOrderList')}}>Go to Order List</Text>
+        <Text style={[{textAlign: 'center'}, {marginTop: 25}]} onPress={()=>{this.props.navigation.navigate('userInfoList')}}>Go to User Info</Text>
+
         <Button title="Logout" onPress={() => this.signOutUser()} />
       </View>
     )

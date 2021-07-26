@@ -93,6 +93,22 @@ const logout = (req, res, next) =>
     console.log(jwt);
 }
 
+const details = (req, res, next) =>
+{
+    
+    User.find()
+            .then(user => res.json(user))
+            .catch(err => res.status(400).json('Error:' + err));
+}
+
+const getuserInfo = (req, res, next) =>
+{
+    const itemId = req.params.id
+    User.findById(itemId)
+            .then(user => res.json(user))
+            .catch(err => res.status(400).json('Error:' + err));
+}
+
 module.exports = {
-    register, login, logout
+    register, login, logout, details, getuserInfo
 }

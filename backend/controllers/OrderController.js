@@ -66,7 +66,24 @@ const userOrders = (req, res, next) => {
     })
   };
 
+  const getOrderByUserId = (req, res, next) => {
+    const userId = req.query.userId;
+    const filter = {
+      userId: userId,
+    };
+    Order.find(filter)
+      .then((orders) => {
+        if (orders.length > 0) res.json(orders[0]);
+        else {
+          res.json({});
+        }
+      })
+      .catch((err) => res.status(400).json("Error:" + err));
+  };
+
+
+
 
 module.exports = {
-    add, allOrders, userOrders, updateOrderStatus
+    add, allOrders, userOrders, updateOrderStatus, getOrderByUserId
   };
