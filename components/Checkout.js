@@ -161,6 +161,7 @@ class Checkout extends React.Component {
       .then(() => {
         alert("Your order has been succesfully placed");
         self.deleteCart(userid);
+        self.props.navigation.navigate('Home');
       }).catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
