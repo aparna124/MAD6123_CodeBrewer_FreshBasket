@@ -9,15 +9,12 @@ export default class userOrderDetail extends Component {
   state = { orders: [], userInfo: ''}
 
   initOrder() {
+  
+      const userId = this.props.navigation.getParam('userId')
 
-    // axios
-    // .get(HOST_URL + "/get-by-user-id?userId=" + userId)
-    // .then(function (doc) {
-
-
-    
-    axios.get(HOST_URL + 'order')
+      axios.get(HOST_URL + 'order/' + userId)
       .then(res => {
+        console.log(res.data);
         this.setState({ orders: res.data })
       });
   }
@@ -25,18 +22,18 @@ export default class userOrderDetail extends Component {
   initUser()
   {
     const itemId = this.props.navigation.getParam('itemId')
+    console.log(itemId);
     axios.get(HOST_URL + 'user/' + itemId)
       .then(res => {
         this.setState({userInfo: res.data})
-        console.log(this.state.userInfo);
       })
       .catch((error) => console.log('error',error));
     
   }
 
   componentDidMount() {
-    this.initOrder()
     this.initUser()
+    this.initOrder()
     this.willFocusSubscription = this.props.navigation.addListener(
       'willFocus',
       () => {
@@ -100,7 +97,6 @@ export default class userOrderDetail extends Component {
                   <Text style={styles.itemPrice}>Order status: {item.status}</Text>
                   <Text style={styles.itemPrice}>Total Product: {item.products.size}</Text>
                   <Text style={styles.itemPrice}>Total Price: $ {item.totalPrice}</Text>
-                  <Text style={styles.itemPrice}>User Name: {item.user[0].firstname} {item.user[0].lastname}</Text>
                 </TouchableOpacity>
               )
             }} />

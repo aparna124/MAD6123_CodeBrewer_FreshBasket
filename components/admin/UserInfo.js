@@ -33,11 +33,6 @@ export default class UserInfo extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {/* <View style={styles.signUpbutton}>
-            <TouchableOpacity style={[styles.signUp]} onPress={()=>{this.props.navigation.navigate('adminProduct')}}>
-                <Text style={[{textAlign: 'center'}]} >Add New Product</Text>
-            </TouchableOpacity>
-        </View> */}
         <SafeAreaView>
         <FlatList
           data={this.state.user}
@@ -45,22 +40,9 @@ export default class UserInfo extends Component {
           renderItem={({item}) => {
             return (
             <TouchableOpacity style={styles.item}>
-              {/* <View style={styles.imageView}>
-                <Image
-                  style={styles.image}
-                  source={{
-                    uri: item.imagePath,
-                  }}
-                />
-              </View> */}
               <Text style={styles.itemText}>{item.email}</Text>
-              {/* <Text style={styles.itemPrice}>$ {item.price}</Text> */}
-              {/* <TouchableOpacity style={styles.button} onPress={() => this.editProduct( item._id)}>
-                    <AntDesign style={styles.rightIcon} name="edit" size={24} color="black" />
-                </TouchableOpacity> */}
                 <TouchableOpacity style={styles.button}>
-                    <Button title="See All" onPress={() => this.props.navigation.navigate('userOrderDetail', {itemId: item._id})}/>
-                    {/* <AntDesign style={styles.rightIcon} name="delete" size={24} color="black" /> */}
+                    <Button title="See All" onPress={() => this.props.navigation.navigate('userOrderDetail', {itemId: item._id, userId: item.userid})}/>
                 </TouchableOpacity>
             </TouchableOpacity>
           )}}/>

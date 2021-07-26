@@ -33,7 +33,6 @@ fetchCartData()
 {
 
   var self = this;
-  //const db = firebaseApp.firestore();
   const storage = firebaseApp.storage();
   var userId;
   var products = [];
@@ -43,12 +42,8 @@ fetchCartData()
     if (user) {
       
       userId = firebaseApp.auth().currentUser.uid;
-      //console.log(userId);
       let itemIdList;
-      // let items;
-
       let count;
-      //db.collection("cart").doc(userId).get().then(function(doc)
       axios
       .get(HOST_URL + "cart/get-by-user-id?userId=" + userId).then(function(doc){
         let items;
@@ -56,17 +51,11 @@ fetchCartData()
         itemIdList = Object.keys(items);
         count = itemIdList.length; 
 
-        //console.log(itemIdList);
-    
-        //console.log(items[doc.productId]);
         if(itemIdList.length > 0)
         {
 
-
           axios.get(HOST_URL + "product").then((res) => {
-            //console.log(res.data);
             res.data.forEach(element => {
-              //console.log(element._id);
               if(itemIdList.indexOf(element._id) !== -1)
               {
                  console.log(element);
@@ -75,37 +64,6 @@ fetchCartData()
             });
             self.setState({ products: products});
           });
-
-
-
-
-          // db.collection("products").get().then((snapshot) => {
-          //   snapshot.docs.forEach(doc => {
-          //     if( itemIdList.indexOf(doc.id) !== -1)
-          //     {
-               
-          //       dataPromisies.push(
-          //       storage.ref(doc.data().image).getDownloadURL().then((url) => {
-          //       products = [ ...products, { id: doc.id, imagePath: url, quantity: items[doc.id], ...doc.data() }];
-          //     }).catch(() => {
-          //       products = [ ...products, { id: doc.id, quantity: items[doc.id], ...doc.data() }];
-          //     })
-          //     );
-          //   }
-
-
-
-          //   });
-           
-          //   Promise.all(dataPromisies).then(() => {
-          //     self.setState({products: products})
-          //     console.log(items[doc.id])
-              
-          //   })  
-          // }).catch((error) => console.log('error',error));
-
-
-
         }
         else{
           // empty cart
@@ -155,56 +113,11 @@ deleteItem(productId) {
           });
           
       }; 
-        // delete(items[productId]);
-       
-        // firebaseApp.firestore().collection("cart").doc(userId).set({
-        //   items: items,
-        //   userId:userId
-        // }).then(() => {
-        //     alert("Document deleted succesfully!");
-        //     self.fetchCartData();
-        //   }).catch((error) => {
-        //     var errorCode = error.code;
-        //     var errorMessage = error.message;
-        //     // ..
-        //     //alert("Error: " + errorMessage);
-        //   });
        
     })
     }
   })
 }
-
-// deleteItem(productId) {
-//   var self = this;
-//   firebaseApp.auth().onAuthStateChanged(function (user) {
-//     if (user) {
-
-//     const userId = firebaseApp.auth().currentUser.uid;
-//     firebaseApp.firestore().collection('cart').doc(userId).get().then(function(doc){
-//       let items;
-//       if(doc.exists)
-//       {
-//         items = doc.data().items;
-//         delete(items[productId]);
-//         //cartSave(items, userId);
-//         firebaseApp.firestore().collection("cart").doc(userId).set({
-//           items: items,
-//           userId:userId
-//         }).then(() => {
-//             alert("Document deleted succesfully!");
-//             self.fetchCartData();
-//           }).catch((error) => {
-//             var errorCode = error.code;
-//             var errorMessage = error.message;
-//             // ..
-//             //alert("Error: " + errorMessage);
-//           });
-//       } 
-//     })
-//     }
-//   })
-// }
 
 IncrementItem = (productId) => {
   console.log("Incrementing");
@@ -256,27 +169,9 @@ cartSave(items, userId)
     .catch((error) => {
       var errorCode = error.code;
       var errorMessage = error.message;
-      // ..
-      //window.alert("Error: " + errorMessage);
     });
   })
 }
-
-// cartSave(items, userId)
-// {
-//   firebaseApp.firestore().collection("cart").doc(userId).set({
-//     items: items,
-//     userId:userId
-//   }).then(() => {
-//       // alert("Document deleted succesfully!");
-//       fetchCartData();
-//     }).catch((error) => {
-//       var errorCode = error.code;
-//       var errorMessage = error.message;
-//       // ..
-//       // alert("Error: " + errorMessage);
-//     });
-// }
 
 render() {
       return (
@@ -308,20 +203,16 @@ render() {
                   <TouchableOpacity style={styles.increBtn} onPress={() => this.DecreaseItem(item.id)}>
                     <Text  style={styles.textBtn}>-</Text>
                   </TouchableOpacity>
-                    {/* <Button title = "+" onPress={() => this.IncrementItem(item.id)}/> */}
-                    {/* <TextInput style={styles.input} placeholder= "Qty" value={item.quantity} /> */}
+                 
                     <TextInput style={styles.input} placeholder= "Qty">{item.quantity}</TextInput>
 
                   <TouchableOpacity style={styles.decreBtn} onPress={() => this.IncrementItem(item.id)}>
                     <Text  style={styles.textBtn}>+</Text>
                   </TouchableOpacity>
-                    {/* <Button title = "-" onPress={() => this.DecreaseItem(item.id)}/> */}
                   </View>
                 </View>
                 <View style={styles.delbutton}>
-                    {/* <AntDesign name="delete" size={24} color="#F07D4A" onPress={() => this.deleteItem(item.id)}/> */}
                     <MaterialIcons name="delete" size={24} color="#F07D4A"onPress={() => Alert.alert("Delete", "Are you sure you want to delete this item?", [{text: "yes", onPress: () => this.deleteItem(item.id)}, {text: "No"}])}/>
-                  {/* <Button color="#F07D4A" title="Remove" onPress={() => this.deleteItem(item.id)}/> */}
                 </View>
               
               </View>

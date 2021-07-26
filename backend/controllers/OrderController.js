@@ -32,7 +32,9 @@ const add = (req, res, next) => {
         res.json({Message: err});
     })
   };
+
 const allOrders = (req, res, next) => {
+  
     Order
     .aggregate([
         {
@@ -68,6 +70,7 @@ const userOrders = (req, res, next) => {
 
   const getOrderByUserId = (req, res, next) => {
     const userId = req.query.userId;
+    console.log("User id is" +userId);
     const filter = {
       userId: userId,
     };
@@ -80,9 +83,6 @@ const userOrders = (req, res, next) => {
       })
       .catch((err) => res.status(400).json("Error:" + err));
   };
-
-
-
 
 module.exports = {
     add, allOrders, userOrders, updateOrderStatus, getOrderByUserId
