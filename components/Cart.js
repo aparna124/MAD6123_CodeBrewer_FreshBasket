@@ -44,18 +44,22 @@ fetchCartData()
       userId = firebaseApp.auth().currentUser.uid;
       let itemIdList;
       let count;
+    
       axios
       .get(HOST_URL + "cart/get-by-user-id?userId=" + userId).then(function(doc){
         let items;
         items = doc.data.items;
         itemIdList = Object.keys(items);
         count = itemIdList.length; 
-
+        
         if(itemIdList.length > 0)
         {
 
-          axios.get(HOST_URL + "/product").then((res) => {
+
+          axios.get(HOST_URL + "product").then((res) => {
+        
             res.data.forEach(element => {
+    
               if(itemIdList.indexOf(element._id) !== -1)
               {
                  console.log(element);
@@ -89,7 +93,7 @@ deleteItem(productId) {
     if (user) {
 
     const userId = firebaseApp.auth().currentUser.uid;
-    axios.get(HOST_URL + "cart/get-by-user-id?userId=" + userId).then(function(doc){
+    axios.get("http://localhost:3000/cart/get-by-user-id?userId=" + userId).then(function(doc){
       let items;
       if(doc)
       {
@@ -97,7 +101,7 @@ deleteItem(productId) {
           delete(items[productId]);
           console.log(items)
           axios
-          .post(HOST_URL + "cart/create-or-update", 
+          .post("http://localhost:3000/cart/create-or-update", 
           {
             userId: userId,
             items: items,
@@ -113,15 +117,16 @@ deleteItem(productId) {
           });
           
       }; 
-       
     })
     }
   })
 }
 
+
+
+
 IncrementItem = (productId) => {
   console.log("Incrementing");
-  //this.setState({quantity: this.state.quantity + 1}) ;;
   const userId = firebaseApp.auth().currentUser.uid;
   let products = this.state.products;
   let product = products.find(p => p.id == productId)
@@ -132,7 +137,7 @@ IncrementItem = (productId) => {
 
 }
 DecreaseItem = (productId) => {
-  // this.setState({quantity: this.state.quantity - 1}) ;
+  
   const userId = firebaseApp.auth().currentUser.uid;
   let products = this.state.products;
   let product = products.find(p => p.id == productId)
@@ -153,7 +158,7 @@ getItemsFromProducts(products)
 
 cartSave(items, userId)
 {
-  axios.get(HOST_URL + "cart/get-by-user-id?userId=" + userId)
+  axios.get("http://localhost:3000/cart/get-by-user-id?userId=" + userId)
   .then(function(doc)
   {
     axios
@@ -169,9 +174,12 @@ cartSave(items, userId)
     .catch((error) => {
       var errorCode = error.code;
       var errorMessage = error.message;
+      // ..
+      //window.alert("Error: " + errorMessage);
     });
   })
 }
+
 
 render() {
       return (
@@ -182,7 +190,7 @@ render() {
           data={this.state.products}
           extraData={this.state}
           renderItem={({item}) => {
-            //var price = item.price[Object.keys(item.price)[0]]
+
             return (
             <TouchableOpacity style={styles.item}>
               <View style={styles.content}>
@@ -190,7 +198,7 @@ render() {
                   <Image
                     style={styles.image}
                     source={{
-                    uri: item.imagePath,
+                    uri: item.image,
                   }}
                   />
                 </View>
@@ -203,7 +211,6 @@ render() {
                   <TouchableOpacity style={styles.increBtn} onPress={() => this.DecreaseItem(item.id)}>
                     <Text  style={styles.textBtn}>-</Text>
                   </TouchableOpacity>
-                 
                     <TextInput style={styles.input} placeholder= "Qty">{item.quantity}</TextInput>
 
                   <TouchableOpacity style={styles.decreBtn} onPress={() => this.IncrementItem(item.id)}>

@@ -187,7 +187,7 @@ class Home extends React.Component {
                     <Image
                       style={styles.image}
                       source={{
-                        uri: item.imagePath,
+                        uri: item.image,
                       }}
                     />
                   </View>
