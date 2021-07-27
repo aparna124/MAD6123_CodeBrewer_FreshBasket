@@ -87,7 +87,9 @@ class Profile extends Component {
           contact: this.state.contact,
           address: this.state.address,
         })
-      });
+      }).then(() =>{
+        alert("User updated succesfully");
+      })
   }
 
   render() {

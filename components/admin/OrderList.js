@@ -74,7 +74,7 @@ export default class Product extends Component {
                   <Text style={styles.itemPrice}>Order status: {item.status}</Text>
                   <Text style={styles.itemPrice}>Total Product: {item.products.size}</Text>
                   <Text style={styles.itemPrice}>Total Price: $ {item.totalPrice}</Text>
-                  <Text style={styles.itemPrice}>User Name: {item.user[0].firstname} {item.user[0].lastname}</Text>
+                  {/* <Text style={styles.itemPrice}>User Name: {item.user[0].firstname} {item.user[0].lastname}</Text> */}
                 </TouchableOpacity>
               )
             }} />

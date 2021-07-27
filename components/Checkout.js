@@ -35,18 +35,12 @@ class Checkout extends React.Component {
       if (user) 
       {
         const uid = firebaseApp.auth().currentUser.uid;
-        const db = firebaseApp.firestore();
-        db.collection("user").doc(uid).get() 
-        .then(function(doc)
-        {
-      
-            if(doc.exists)
-            {
-              self.setState({address: doc.data().address});
-            } 
-      }).catch(function(error){
-      console.log("error", error);
-    })
+        axios.get(HOST_URL + "profile?userid=" + uid)
+      .then(res => {
+        self.setState({ address: res.data[0].address });
+      }).catch(function (error) {
+        console.log("error", error);
+      })
       }
       else
       {
